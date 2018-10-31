@@ -5,27 +5,11 @@
 	[
 		"Parranderos_sequence",
 		"BODEGA",
-		"A_BEBIDA",
-		"A_BAR",
-		"A_BEBEDOR",
-		"A_GUSTAN",
-		"A_SIRVEN",
-		"A_VISITAN"
-	]
-}
-{
-	"title": "Nombres de las tablas de SuperAndes Uniandes para la aplicación A",
-	"unidadPersistencia": "SuperAndes",
-	"tablas":
-	[
-		"SuperAndes_sequence",
-		"BODEGA",
+		"BODEGA_PRODUCTO",
 		"COMPRA",
-		"COMPRAPROMOCION",
-		"EMPRESA",
+		"COMPRA_PRODUCTO",
 		"ESTANTE",
-		"LLEGADAPRODUCTO",
-		"ORDENPEDIDO"
-		"PERSONANATURAL"
+		"ESTANTE_PRODUCTO",
+		"A_VISITAN"
 	]
 }

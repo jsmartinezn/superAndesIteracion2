@@ -1,5 +1,6 @@
 package superAndes.persistencia;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -20,9 +21,12 @@ import com.google.gson.JsonObject;
 import oracle.net.aso.p;
 import oracle.net.aso.v;
 import superAndes.negocio.Bodega;
+import superAndes.negocio.BodegaProducto;
 import superAndes.negocio.Compra;
 import superAndes.negocio.Empresa;
 import superAndes.negocio.Estante;
+import superAndes.negocio.EstanteProducto;
+import superAndes.negocio.Indice;
 import superAndes.negocio.LlegadaProducto;
 import superAndes.negocio.OrdenPedido;
 import superAndes.negocio.PersonaNatural;
@@ -70,11 +74,17 @@ public class PersistenciaSuperAndes {
 	
 	private SQLBodega sqlBodega;
 	
+	private SQLBodegaProducto sqlBodegaProducto;
+	
 	private SQLCompra sqlCompra;
+	
+	private SQLCompraProducto sqlCompraProducto;
 	
 	private SQLEmpresa sqlEmpresa;
 	
 	private SQLEstante sqlEstante;
+	
+	private SQLEstanteProducto sqlEstanteProducto;
 	
 	private SQLOrdenPedido sqlOrden;
 	
@@ -106,7 +116,9 @@ public class PersistenciaSuperAndes {
 		tablas = new LinkedList<String> ();
 		tablas.add ("SuperAndes_sequence");
 		tablas.add ("BODEGA");
+		tablas.add("Bodega_Producto");
 		tablas.add ("COMPRA");
+		tablas.add("COMPRA_PRODUCTO");
 		tablas.add ("EMPRESA");
 		tablas.add ("ESTANTE");
 		tablas.add ("ORDENPEDIDO");
@@ -168,13 +180,20 @@ public class PersistenciaSuperAndes {
 	{
 		return tablas.get(1);
 	}
+	public String darTablaBodegaProducto()
+	{
+		return tablas.get(2);
+	}
+	public String darTablaCompraProducto() {
+		return tablas.get(4);
+	}
 	public String darTablaPersonaNatural()
 	{
 		return tablas.get(6);
 	}
 	public String darTablaCompra()
 	{
-		return tablas.get(2);
+		return tablas.get(3);
 	}
 	public String darTablaEmpresa()
 	{
@@ -182,7 +201,11 @@ public class PersistenciaSuperAndes {
 	}
 	public String darTablaEstante()
 	{
-		return tablas.get(4);
+		return tablas.get(5);
+	}
+	public String darTablaEstanteProducto()
+	{
+		return tablas.get(6);
 	}
 	public String darTablaOrdenPedido()
 	{
@@ -224,9 +247,12 @@ public class PersistenciaSuperAndes {
 	public void crearClasesSql()
 	{
 		sqlBodega = new SQLBodega(this);
+		sqlBodegaProducto = new SQLBodegaProducto(this);
 		sqlCompra = new SQLCompra(this);
+		sqlCompraProducto = new SQLCompraProducto(this);
 		sqlEmpresa = new SQLEmpresa(this);
 		sqlEstante = new SQLEstante(this);
+		sqlEstanteProducto = new SQLEstanteProducto(this);
 		sqlOrden = new SQLOrdenPedido(this);
 		sqlPersona = new SQLPersonaNatural(this);
 		sqlLLegadaProducto = new SQLLlegadaProducto(this);
@@ -269,18 +295,140 @@ public class PersistenciaSuperAndes {
 		return resp;
 	}
 	
+	public String darIndiceDeOcupacionBodegaPeso(Long idSucursal)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        String resp = "";
+        try
+        {
+            tx.begin();
+            List<Indice> lista = sqlBodega.darIndiceDeOcupacionPeso(pm, idSucursal);
+            tx.commit();
+            for(Indice temp : lista){
+            	resp += "La bodega de indice: " +temp.getId() + " posee un indice de ocupacion por peso de: " + temp.getIndice()+"\n";
+            }
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+        return resp;
+	}
+	public String darIndiceDeOcupacionBodegaVolumen(Long idSucursal)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        String resp = "";
+        try
+        {
+            tx.begin();
+            List<Indice> lista = sqlBodega.darIndiceDeOcupacionVolumen(pm,idSucursal);
+            tx.commit();
+            for(Indice temp : lista){
+            	resp += "La bodega de indice: " +temp.getId() + " posee un indice de ocupacion por volumen de: " + temp.getIndice()+"\n";
+            }
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+        return resp;
+	}
+	public String darIndiceDeOcupacionEstantePeso(Long idSucursal)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        String resp = "";
+        try
+        {
+            tx.begin();
+            List<Indice> lista = sqlEstante.darIndiceDeOcupacionPeso(pm,idSucursal);
+            tx.commit();
+            for(Indice temp : lista){
+            	resp += "El estante de indice: " +temp.getId() + " posee un indice de ocupacion por peso de: " + temp.getIndice()+"\n";
+            }
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+        return resp;
+	}
+	public String darIndiceDeOcupacionEstanteVolumen(Long idSucursal)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        String resp = "";
+        try
+        {
+            tx.begin();
+            List<Indice> lista = sqlEstante.darIndiceDeOcupacionVolumen(pm,idSucursal);
+            tx.commit();
+            for(Indice temp : lista){
+            	resp += "El estante de indice: " +temp.getId() + " posee un indice de ocupacion por volumen de: " + temp.getIndice()+"\n";
+            }
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+        return resp;
+	}
+	
 	public Bodega adicionarBodega(Long idSucursal, String tipoProducto,Double volumen,Double peso){
 		PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx=pm.currentTransaction();
         try
         {
             tx.begin();
-            long tuplasInsertadas = sqlBodega.adicionarBodega(pm, idSucursal,tipoProducto,volumen,0.0,peso,0.0,0);
+            long id =nextval();
+            long tuplasInsertadas = sqlBodega.adicionarBodega(pm, id, idSucursal,tipoProducto,volumen,peso);
             tx.commit();
             
-            log.trace ("Inserción de la bodega: " + idSucursal + ": " + tuplasInsertadas + " tuplas insertadas");
+            log.trace ("Inserción de la bodega: " + id + ": " + tuplasInsertadas + " tuplas insertadas");
             
-            return new Bodega (idSucursal, tipoProducto,volumen,0.1,peso,0.1,0);
+            return new Bodega (id,idSucursal, tipoProducto,volumen,peso);
         }
         catch (Exception e)
         {
@@ -298,43 +446,91 @@ public class PersistenciaSuperAndes {
         }
 	}
 	
-	public List<String> indiceDeOcupacionVolumenBodega(Long idSucursal){
-		
-		List<Bodega> nueva = sqlBodega.darBodega(pmf.getPersistenceManager(), idSucursal);
-		ArrayList<String> resp = new ArrayList<>();
-		for(Bodega a : nueva)
-		{
-			resp.add("El indice del producto " + a.getTipoProducto() + " es: " + a.getVolumenActual()/a.getVolumen());
-		}
-		return resp;
-	}
 	
-	public List<String> indiceDeOcupacionPesoBodega(Long idSucursal){
-		List<Bodega> nueva = sqlBodega.darBodega(pmf.getPersistenceManager(), idSucursal);
-		ArrayList<String> resp = new ArrayList<>();
-		for(Bodega a : nueva)
-		{
-			resp.add("El indice del producto " + a.getTipoProducto() + " es: " + a.getPesoActual()/a.getPeso());
-		}
-		return resp;
-	}
-	
-	public Compra adicionarCompra(Long idC, Long idP, Long idS, Integer cantidad, Boolean promocion,Double precio,Date fecha){
+	public BodegaProducto adicionarBodegaProducto(Long idBodega,Long idProducto,Integer cantidad){
 		PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx=pm.currentTransaction();
         try
         {
             tx.begin();
+            long tuplasInsertadas = sqlBodegaProducto.adicionarBodegaProducto(pm, idBodega,idProducto,cantidad);
+            tx.commit();
+            
+            log.trace ("Inserción de la bodega_producto: " + idBodega +" ; "+ idProducto + ": " + tuplasInsertadas + " tuplas insertadas");
+            
+            return new BodegaProducto(idProducto, idBodega, cantidad);
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+        
+	}
+	
+	public Compra adicionarCompra(Long idC, Long idS,Long idP, Integer cantidad,Date fecha){
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        try
+        {
+            tx.begin();
+            //Registra la compra
             long idCompra = nextval ();
-            long tuplasInsertadas = sqlCompra.adicionarCompra(pm, idCompra, idC, idP, idS, cantidad, promocion, precio, fecha);
-            Bodega nuevo = sqlBodega.darBodega(pm, idS, idP);
-            Integer actualizarEstante = sqlEstante.actualizarVenta(pm, idS, idP,cantidad, nuevo.getCantidad());
-            if(actualizarEstante != 0)  sqlBodega.actualizarBodega(pm,actualizarEstante,idC,idS);
+            long tuplasInsertadas = sqlCompra.adicionarCompra(pm, idCompra, idC, idS, fecha);
+            List<Object[]> disponible = sqlEstanteProducto.unidadesEnInventario(pm, idS, idP);
+            Integer disp = 0;
+            //Revisar si existe la cantidad del producto deseado en los estantes, arroja excepcion de lo contrario
+            for(Object[] temp : disponible){
+            	BigDecimal ayuda = (BigDecimal) temp[1];
+            	disp += ayuda.intValue();
+            }
+            if(cantidad<=disp)
+            {
+            	//Actualizar Estante
+            	int cantidad2 = 0 + cantidad;
+            	boolean a = false;
+            	for(int i = 0;i < disponible.size() && !a;i++){
+                	BigDecimal ayuda = (BigDecimal) disponible.get(i)[1];
+                	BigDecimal idEstante = (BigDecimal) disponible.get(i)[0];
+            		if(cantidad2>ayuda.intValue()){
+            			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, 0);
+            			cantidad2-=idEstante.longValue();
+            		}
+            		else{
+            			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, ayuda.intValue()-cantidad2);
+            			a = true;
+            			cantidad2=0;
+            		}
+            	}
+            	disp-=cantidad;
+            	List<Object[]> lista = sqlBodegaProducto.unidadesEnInventario(pm, idS, idP);
+                for(Object[] temp : lista){
+                	BigDecimal ayuda = (BigDecimal) temp[1];
+                	disp += ayuda.intValue();
+                }
+                Integer nivelReOrden = 6;//Se necesita la clase sucursal-producto para esto esperar compañero
+                if(disp<nivelReOrden){
+                	
+                }
+            }
+            else{
+            	tx.rollback();
+            	throw new Exception("No hay diponibilidad del producto");
+            }
             tx.commit();
             
             log.trace ("Inserción de la compra: " + idCompra + ": " + tuplasInsertadas + " tuplas insertadas");
             
-            return new Compra(idCompra, idC, idP, idS, cantidad, promocion, precio, fecha);
+            return new Compra(idCompra, idC, idS, fecha);
         }
         catch (Exception e)
         {
@@ -392,19 +588,19 @@ public class PersistenciaSuperAndes {
         }
 	}
 	
-	public Estante adicionarEstante(String tipoProducto,Double volumen,Double volumen2,String unidadV,Double peso,Double peso2,String unidadP,Integer nivel){
+	public Estante adicionarEstante(Long idSucursal, String tipoProducto,Double volumen,Double peso,Double nivel){
 		PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx=pm.currentTransaction();
         try
         {
             tx.begin();
-            long idEstante = nextval ();
-            long tuplasInsertadas = sqlEstante.adicionarEstante(pm, idEstante, tipoProducto, volumen, volumen2, unidadV, peso, peso2, unidadP,0,nivel);
+            long id =nextval();
+            long tuplasInsertadas = sqlEstante.adicionarEstante(pm, id, idSucursal,tipoProducto,volumen,peso,nivel);
             tx.commit();
             
-            log.trace ("Inserción de la empresa: " + idEstante + ": " + tuplasInsertadas + " tuplas insertadas");
+            log.trace ("Inserción de la bodega: " + id + ": " + tuplasInsertadas + " tuplas insertadas");
             
-            return new Estante(idEstante, tipoProducto, volumen, volumen2, unidadV, peso, peso2, unidadP,0,nivel);
+            return new Estante (id,idSucursal, tipoProducto,volumen,peso,nivel);
         }
         catch (Exception e)
         {
@@ -421,7 +617,7 @@ public class PersistenciaSuperAndes {
             pm.close();
         }
 	}
-	
+	/*
 	public List<String> indiceDeOcupacionVolumenEstante(Long idSucursal){
 		
 		List<Estante> nueva = sqlEstante.darEstante(pmf.getPersistenceManager(), idSucursal);
@@ -442,7 +638,7 @@ public class PersistenciaSuperAndes {
 		}
 		return resp;
 	}
-	
+	*/
 	public OrdenPedido adicionarOrdenPedido(Long idProveedor,Long idSucursal,Date fechaEsperada, String estado){
 		PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx=pm.currentTransaction();
@@ -727,6 +923,4 @@ public class PersistenciaSuperAndes {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		return sqlProducto.darProductoCondicion(pm, condicion);
 	}
-
-	
 }

@@ -7,6 +7,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import superAndes.negocio.Bodega;
+import superAndes.negocio.Indice;
 import superAndes.negocio.Producto;
 
 
@@ -50,14 +51,39 @@ class SQLBodega {
 	 * @param horario - EL horario en que se realizó la visita (DIURNO, NOCTURNO, TODOS)
 	 * @return EL número de tuplas insertadas
 	 */
-	public long adicionarBodega (PersistenceManager pm,Long id,String tipoProducto,Double volumen,Double volumen2,Double peso,Double peso2,Integer cantidad) 
+	public long adicionarBodega (PersistenceManager pm,Long id,Long idS,String tipoProducto,Double volumen,Double peso) 
 	{
-		System.out.println(id);
-        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaBodega () + "(id_Sucursal, tipo_Producto, volumen, volumen_actual, peso, peso_actual,cantidad) values (?, ?, ?, ?, ?, ?, ?)");
-        q.setParameters(id,tipoProducto,volumen,volumen2,peso, peso2,cantidad);
+        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaBodega () + "(id,id_Sucursal, tipo_Producto, volumen, peso) values (?, ?, ?, ?, ?)");
+        q.setParameters(id,idS,tipoProducto,volumen,peso);
         return (long) q.executeUnique();
 	}
 
+	public List<Indice> darIndiceDeOcupacionPeso (PersistenceManager pm, Long idSucursal )
+	{
+		String a =  "SELECT bodega.id as id, pesos/bodega.peso as indice FROM " ;
+		a+= pp.darTablaBodega(); 
+		a+= ",( SELECT bodega_producto.id_bodega as IDD, SUM(cantidad*peso) as pesos FROM ";
+		a+= pp.darTablaBodegaProducto() + "," + "PRODUCTO ";
+		a+= " WHERE producto.id = bodega_producto.id_producto GROUP BY bodega_producto.id_bodega)WHERE IDD=ID AND BODEGA.ID_SUCURSAL = ?";
+		Query q = pm.newQuery(SQL, a);
+		q.setParameters(idSucursal);
+		q.setResultClass(Indice.class);
+		return q.executeList();
+	}
+	
+	public List<Indice> darIndiceDeOcupacionVolumen (PersistenceManager pm , Long idSucursal )
+	{
+		String a =  "SELECT bodega.id as id, pesos/bodega.volumen as indice FROM " ;
+		a+= pp.darTablaBodega(); 
+		a+= ",( SELECT bodega_producto.id_bodega as IDD, SUM(cantidad*volumen) as pesos FROM ";
+		a+= pp.darTablaBodegaProducto() + "," + "PRODUCTO ";
+		a+= " WHERE producto.id = bodega_producto.id_producto GROUP BY bodega_producto.id_bodega)WHERE IDD=ID AND BODEGA.ID_SUCURSAL = ?";
+		Query q = pm.newQuery(SQL, a);
+		q.setParameters(idSucursal);
+		q.setResultClass(Indice.class);
+		return q.executeList();
+	}
+	
 	
 	public List<Bodega> darBodega(PersistenceManager pm,Long idSucursal)
 	{
@@ -83,7 +109,7 @@ class SQLBodega {
 		Double peso = nuevo.getPeso();	
 		Bodega temp = darBodega(pm, idS, idP);
 		Query p = pm.newQuery(SQL, "UPDATE " + pp.darTablaBodega() + " SET volumenactual = ?, pesoactual = ?, cantidad = ? WHERE tipoproducto = (SELECT tipoproducto FROM " + pp.darTablaProducto() + " WHERE id = ?) AND idSucursal = ? ");
-		p.setParameters((temp.getCantidad()-cant)*volumen,(temp.getCantidad()-cant)*peso,cant,idP,idS);
+		p.setParameters((0-cant)*volumen,(0-cant)*peso,cant,idP,idS);
 		return (long)p.executeUnique();
 		
 	}

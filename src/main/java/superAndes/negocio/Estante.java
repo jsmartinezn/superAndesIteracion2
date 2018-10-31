@@ -2,50 +2,34 @@ package superAndes.negocio;
 
 public class Estante implements VOEstante {
 	
+	private Long id;
+	
 	private Long idSucursal;
 	
 	private String tipoProducto;
 	
 	private Double volumen;
 	
-	private Double volumenActual;
-	
-	private String unidadVolumen;
-	
 	private Double peso;
 	
-	private Double pesoActual;
-	
-	private String unidadPeso;
-	
-	private Integer cantidad;
-	
-	private Integer nivelDeReOrden;
+	private Double nivelDeReOrden;
 	
 	public Estante(){
+		this.id = (long)0;
 		this.idSucursal = (long) 0;
 		this.tipoProducto = "";
 		this.volumen = 0.0;
-		this.unidadVolumen = "cm3";
 		this.volumen = 0.0;
-		this.unidadPeso = "gr";
-		this.setPesoActual(0.0);
-		this.setVolumenActual(0.0);
-		this.cantidad = 0;
-		this.nivelDeReOrden = 0;
+		this.nivelDeReOrden = 0.0;
 	}
 	
-	public Estante(Long id, String tipoProducto, Double volumen,Double volumen2,String unidadV, Double peso,Double peso2,String unidadP,Integer cantidad,Integer nivel)
+	public Estante(Long id,Long idSucursal, String tipoProducto, Double volumen, Double peso,Double nivel)
 	{
-		this.idSucursal = id;
+		this.id = id;
+		this.idSucursal = idSucursal;
 		this.tipoProducto = tipoProducto;
 		this.volumen = volumen;
 		this.peso = peso;
-		this.unidadPeso = unidadP;
-		this.unidadVolumen = unidadV;
-		this.setPesoActual(peso2);
-		this.setVolumenActual(volumen2);
-		this.cantidad = cantidad;
 		this.nivelDeReOrden = nivel;
 	}
 
@@ -73,14 +57,6 @@ public class Estante implements VOEstante {
 		this.volumen = volumen;
 	}
 
-	public String getUnidadVolumen() {
-		return unidadVolumen;
-	}
-
-	public void setUnidadVolumen(String unidadVolumen) {
-		this.unidadVolumen = unidadVolumen;
-	}
-
 	public Double getPeso() {
 		return peso;
 	}
@@ -89,43 +65,20 @@ public class Estante implements VOEstante {
 		this.peso = peso;
 	}
 
-	public String getUnidadPeso() {
-		return unidadPeso;
-	}
 
-	public void setUnidadPeso(String unidadPeso) {
-		this.unidadPeso = unidadPeso;
-	}
-
-	public Double getVolumenActual() {
-		return volumenActual;
-	}
-
-	public void setVolumenActual(Double volumenActual) {
-		this.volumenActual = volumenActual;
-	}
-
-	public Double getPesoActual() {
-		return pesoActual;
-	}
-
-	public void setPesoActual(Double pesoActual) {
-		this.pesoActual = pesoActual;
-	}
-
-	public Integer getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
-	}
-
-	public Integer getNivelDeReOrden() {
+	public Double getNivelDeReOrden() {
 		return nivelDeReOrden;
 	}
 
-	public void setNivelDeReOrden(Integer nivelDeReOrden) {
+	public void setNivelDeReOrden(Double nivelDeReOrden) {
 		this.nivelDeReOrden = nivelDeReOrden;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

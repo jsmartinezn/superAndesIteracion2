@@ -61,16 +61,28 @@ public class SuperAndes {
 		return pp.adicionarBodega(idSucursal,tipoProducto, volumen, peso);
 	}
 	
-	public List<String> indiceDeOcupacionPesoBodega(Long idSucursal){
-		return pp.indiceDeOcupacionPesoBodega(idSucursal);
+	public String indiceDeOcupacionPesoBodega(Long idSucursal){
+		return pp.darIndiceDeOcupacionBodegaPeso(idSucursal);
 	}
 	
-	public List<String> indiceDeOcupacionVolumenBodega(Long idSucursal){
-		return pp.indiceDeOcupacionVolumenBodega(idSucursal);
+	public String indiceDeOcupacionVolumenBodega(Long idSucursal){
+		return pp.darIndiceDeOcupacionBodegaVolumen(idSucursal);
 	}
 	
-	public Compra adicionarCompra(Long idC, Long idP, Long idS, Integer cantidad, Boolean promocion,Double precio,Date fecha){
-		return pp.adicionarCompra(idC, idP, idS, cantidad, promocion, precio, fecha);
+	public String indiceDeOcupacionPesoEstante(Long idSucursal){
+		return pp.darIndiceDeOcupacionEstantePeso(idSucursal);
+	}
+	
+	public String indiceDeOcupacionVolumenEstante(Long idSucursal){
+		return pp.darIndiceDeOcupacionEstanteVolumen(idSucursal);
+	}
+	
+	public BodegaProducto adicionarBodegaProducto(Long idBodega,Long idProducto,Integer cantidad){
+		return pp.adicionarBodegaProducto(idBodega, idProducto, cantidad);
+	}
+	
+	public Compra adicionarCompra(Long idC, Long idS, Long idP,Integer cantidad,Date fecha){
+		return pp.adicionarCompra(idC, idS,idP,cantidad, fecha);
 	}
 	
 	public List<VOCompra> darComprasFechas(Date fechaInicio,Date fechaFin){
@@ -93,17 +105,17 @@ public class SuperAndes {
 		return pp.adicionarEmpresa(nombre, correo, nit, direccion);
 	}
 	
-	public Estante adicionarEstante(String tipoProducto,Double volumen,Double volumen2,String unidadV,Double peso,Double peso2,String unidadP,Integer nivel){
-		return pp.adicionarEstante(tipoProducto, volumen, volumen2, unidadV, peso, peso2, unidadP,nivel);
+	public Estante adicionarEstante(Long idSucursal,String tipoProducto,Double volumen,Double peso,Double nivelReOrden){
+		return pp.adicionarEstante(idSucursal,tipoProducto, volumen, peso,nivelReOrden);
 	}
-	
+/*	
 	public List<String> indiceDeOcupacionPesoEstante(Long idSucursal){
 		return pp.indiceDeOcupacionPesoEstante(idSucursal);
 	}
 	
 	public List<String> indiceDeOcupacionVolumenEstante(Long idSucursal){
 		return pp.indiceDeOcupacionVolumenEstante(idSucursal);
-	}
+	}*/
 	
 	public OrdenPedido adicionarOrdenPedido(Long idProveedor,Long idSucursal,Date fechaEsperada, String estado){
 		return pp.adicionarOrdenPedido(idProveedor, idSucursal, fechaEsperada, estado);

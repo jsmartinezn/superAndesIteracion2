@@ -5,17 +5,37 @@
 	"bannerPath": "./src/main/resources/config/logo.png",
 	"menuBar":
 	[
-		{ "menuTitle": "Bodega",
+		{ "menuTitle": "Registrar",
 		  "options":
 			[
 				{
-					"label": "Adicionar",
+					"label": "Bodega",
 					"event": "adicionarBodega"
 				},
 				{
-					"label": "Listar Peso",
-					"event": "listarBodegaPeso"
-				}
+					"label": "Compra",
+					"event": "adicionarCompra"
+				},
+				{
+					"label": "Estante",
+					"event": "adicionarEstante"
+				},
+				{
+					"label": "Peso_Bodega",
+					"event": "indiceDeOcupacionPesoBodega"
+				},
+				{
+					"label": "Volumen_Bodega",
+					"event": "indiceDeOcupacionVolumenBodega"
+				},
+				{
+					"label": "Peso_Estante",
+					"event": "indiceDeOcupacionPesoEstante"
+				},
+				{
+					"label": "Volumen_Estante",
+					"event": "indiceDeOcupacionVolumenEstante"
+				}					
 			]
 		},
 		{ "menuTitle": "Mantenimiento",

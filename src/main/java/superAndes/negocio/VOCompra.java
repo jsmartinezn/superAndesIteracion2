@@ -8,15 +8,7 @@ public interface VOCompra {
 	
 	public Long getIdSucursal();
 	
-	public Long getIdProducto();
-	
-	public Integer getCantidad();
-	
-	public Boolean getPromocion();
-	
 	public Long getId();
-	
-	public Double getPrecio();
 	
 	public Date getFecha();
 }

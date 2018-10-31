@@ -8,17 +8,9 @@ public interface VOEstante {
 	
 	public Double getVolumen();
 	
-	public String getUnidadVolumen();
-	
 	public Double getPeso();
 	
-	public String getUnidadPeso();
+	public Double getNivelDeReOrden();
 	
-	public Double getPesoActual();
-	
-	public Double getVolumenActual();
-	
-	public Integer getCantidad();
-	
-	public Integer getNivelDeReOrden();
+	public Long getId();
 }

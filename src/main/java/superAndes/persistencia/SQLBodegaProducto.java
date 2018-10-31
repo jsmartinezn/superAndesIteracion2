@@ -1,14 +1,11 @@
 package superAndes.persistencia;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import superAndes.negocio.Compra;
 
-class SQLCompra {
-	
+public class SQLBodegaProducto {
 	/* ****************************************************************
 	 * 			Constantes
 	 *****************************************************************/
@@ -33,7 +30,7 @@ class SQLCompra {
 	 * Constructor
 	 * @param pp - El Manejador de persistencia de la aplicación
 	 */
-	public SQLCompra (PersistenciaSuperAndes pp)
+	public SQLBodegaProducto (PersistenciaSuperAndes pp)
 	{
 		this.pp = pp;
 	}
@@ -47,26 +44,21 @@ class SQLCompra {
 	 * @param horario - EL horario en que se realizó la visita (DIURNO, NOCTURNO, TODOS)
 	 * @return EL número de tuplas insertadas
 	 */
-	public long adicionarCompra (PersistenceManager pm,Long id, Long idC, Long idS,Date fecha) 
+	public long adicionarBodegaProducto (PersistenceManager pm,Long idBodega,Long idProducto,Integer cantidad) 
 	{
-        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaCompra () + "(id, id_cliente, id_sucursal, fecha) values (?, ?, ?, ?)");
-        q.setParameters(id,idC,idS,fecha);
+        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaBodegaProducto () + "(id_producto,id_bodega, cantidad) values (?, ?, ?)");
+        q.setParameters(idProducto,idBodega,cantidad);
+
         return (long) q.executeUnique();
 	}
-
-	public List<Compra> darDineroTiempo(PersistenceManager pm,Date fechaI,Date fechaF)
-	{
-		Query q = pm.newQuery(SQL, "SELECT idSucursal, cantidad, precio FROM" + pp.darTablaCompra() + "WHERE fecha > ? AND fecha < ? ");
-		q.setResultClass(Compra.class);
-		q.setParameters(fechaI,fechaF);
-		return  q.executeList();
-	}
-	
-	public List<Compra> darDineroPorCliente(PersistenceManager pm,Date fechaI,Date fechaF,Long idCliente)
-	{
-		Query q = pm.newQuery(SQL, "SELECT * FROM" + pp.darTablaCompra() + "WHERE fecha > ? AND fecha < ? AND idCliente = ?");
-		q.setResultClass(Compra.class);
-		q.setParameters(fechaI,fechaF,idCliente);
-		return  q.executeList();
+	public List<Object[]> unidadesEnInventario(PersistenceManager pm, Long idSucursal,Long idProducto){
+		String a = "SELECT ID_BODEGA,CANTIDAD FROM ";
+		a += pp.darTablaBodegaProducto() + "," + pp.darTablaBodega();
+		a+=" WHERE ID_PRODUCTO = ? AND BODEGA.ID=BODEGA_PRODUCTO.ID_BODEGA AND BODEGA.ID_SUCURSAL=?";
+		
+		Query q = pm.newQuery(SQL,a);
+		q.setResultClass(Object[].class);
+		q.setParameters(idProducto,idSucursal);
+		return q.executeList();
 	}
 }

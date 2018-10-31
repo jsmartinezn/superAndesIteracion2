@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.sql.Date;
 import java.util.List;
 
 import javax.jdo.JDODataStoreException;
@@ -33,6 +34,9 @@ import com.google.gson.stream.JsonReader;
 
 import superAndes.negocio.SuperAndes;
 import superAndes.negocio.VOBodega;
+import superAndes.negocio.VOBodegaProducto;
+import superAndes.negocio.VOCompra;
+import superAndes.negocio.VOEstante;
 
 /**
  * Clase principal de la interfaz
@@ -245,8 +249,8 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
         		{
         			throw new Exception ("No se pudo crear un tipo de bodega de: " + tipoProducto);
         		}
-        		String resultado = "En adicionarTipoBebida\n\n";
-        		resultado += "Tipo de bebida adicionado exitosamente: " + tb;
+        		String resultado = "En adicionarBodega\n\n";
+        		resultado += "Bodega adicionada exitosamente: " + tb;
     			resultado += "\n Operación terminada";
     			panelDatos.actualizarInterfaz(resultado);
     		}
@@ -262,17 +266,187 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 			panelDatos.actualizarInterfaz(resultado);
 		}
     }
-
+    /**
+     * Adiciona un tipo de bebida con la información dada por el usuario
+     * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
+     */
+    public void adicionarCompra( )
+    {
+    	try 
+    	{
+    		String idS = JOptionPane.showInputDialog(this,"Id de la sucursal", "Adicionar Compra",JOptionPane.QUESTION_MESSAGE);
+    		String idC = JOptionPane.showInputDialog(this,"Id del cliente", "Adicionar Compra",JOptionPane.QUESTION_MESSAGE);
+    		String idP = JOptionPane.showInputDialog(this,"Id del producto", "Adicionar Compra",JOptionPane.QUESTION_MESSAGE);
+    		String cantidad = JOptionPane.showInputDialog(this, "Cantidad a comprar", "Adicionar Compra", JOptionPane.QUESTION_MESSAGE);
+    		if (idS != null)
+    		{
+        		VOCompra tb = superandes.adicionarCompra(Long.valueOf(idC), Long.valueOf(idS), Long.valueOf(idP),Integer.valueOf(cantidad), new Date(System.currentTimeMillis()));
+        		if (tb == null)
+        		{
+        			throw new Exception ("No se pudo realzar la compra de: " + idC);
+        		}
+        		String resultado = "\n";
+        		resultado += "Compra realizada exitosamente: " + tb;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
+    		else
+    		{
+    			panelDatos.actualizarInterfaz("Operación cancelada por el usuario");
+    		}
+		} 
+    	catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }  
+    /**
+     * Adiciona un tipo de bebida con la información dada por el usuario
+     * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
+     */
+    public void indiceDeOcupacionPesoBodega( )
+    {
+    	try 
+    	{
+    		String idS = JOptionPane.showInputDialog(this,"Id de la sucursal", "Indice de ocupacion",JOptionPane.QUESTION_MESSAGE);
+       		String tb = superandes.indiceDeOcupacionPesoBodega(Long.valueOf(idS));
+       		if (tb == null)
+       		{
+       			throw new Exception ();
+       		}
+       		String resultado = "\n";
+       		resultado += tb;
+   			resultado += "\n Operación terminada";
+   			panelDatos.actualizarInterfaz(resultado);
+  		} 
+    	catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    } 
+    public void indiceDeOcupacionVolumenBodega( )
+    {
+    	try 
+    	{
+    		String idS = JOptionPane.showInputDialog(this,"Id de la sucursal", "Indice de ocupacion",JOptionPane.QUESTION_MESSAGE);
+       		String tb = superandes.indiceDeOcupacionVolumenBodega(Long.valueOf(idS));
+       		if (tb == null)
+       		{
+       			throw new Exception ();
+       		}
+       		String resultado = "\n";
+       		resultado += tb;
+   			resultado += "\n Operación terminada";
+   			panelDatos.actualizarInterfaz(resultado);
+  		} 
+    	catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
+    
+    /**
+     * Adiciona un tipo de bebida con la información dada por el usuario
+     * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
+     */
+    public void indiceDeOcupacionPesoEstante( )
+    {
+    	try 
+    	{
+    		String idS = JOptionPane.showInputDialog(this,"Id de la sucursal", "Indice de ocupacion",JOptionPane.QUESTION_MESSAGE);
+       		String tb = superandes.indiceDeOcupacionPesoEstante(Long.valueOf(idS));
+       		if (tb == null)
+       		{
+       			throw new Exception ();
+       		}
+       		String resultado = "\n";
+       		resultado += tb;
+   			resultado += "\n Operación terminada";
+   			panelDatos.actualizarInterfaz(resultado);
+  		} 
+    	catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    } 
+    public void indiceDeOcupacionVolumenEstante( )
+    {
+    	try 
+    	{
+    		String idS = JOptionPane.showInputDialog(this,"Id de la sucursal", "Indice de ocupacion",JOptionPane.QUESTION_MESSAGE);
+       		String tb = superandes.indiceDeOcupacionVolumenEstante(Long.valueOf(idS));
+       		if (tb == null)
+       		{
+       			throw new Exception ();
+       		}
+       		String resultado = "\n";
+       		resultado += tb;
+   			resultado += "\n Operación terminada";
+   			panelDatos.actualizarInterfaz(resultado);
+  		} 
+    	catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
+    /**
+     * Adiciona un tipo de bebida con la información dada por el usuario
+     * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
+     */
+    public void adicionarEstante( )
+    {
+    	try 
+    	{
+    		String id = JOptionPane.showInputDialog(this,"Id de la sucursal", "Adicionar Estante",JOptionPane.QUESTION_MESSAGE);
+    		Long idSucursal = Long.valueOf(id);
+    		String tipoProducto = JOptionPane.showInputDialog (this, "Tipo del producto", "Adicionar Estante", JOptionPane.QUESTION_MESSAGE);
+    		String volumen = JOptionPane.showInputDialog(this, "Capacidad de volumen total en cm3", "Adicionar Estante", JOptionPane.QUESTION_MESSAGE);
+    		String peso = JOptionPane.showInputDialog(this, "Capacidad de peso total en kg", "Adicionar Estante", JOptionPane.QUESTION_MESSAGE);
+    		String nivel = JOptionPane.showInputDialog(this, "Porcentaje de reorden", "Adicionar Estante", JOptionPane.QUESTION_MESSAGE);
+    		if (id != null)
+    		{
+        		VOEstante tb = superandes.adicionarEstante(idSucursal, tipoProducto, Double.valueOf(volumen), Double.valueOf(peso),Double.valueOf(nivel));
+        		if (tb == null)
+        		{
+        			throw new Exception ("No se pudo crear un tipo de bodega de: " + tipoProducto);
+        		}
+        		String resultado = "En adicionar Estante\n\n";
+        		resultado += "Estante adicionada exitosamente: " + tb;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
+    		else
+    		{
+    			panelDatos.actualizarInterfaz("Operación cancelada por el usuario");
+    		}
+		} 
+    	catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
     /**
      * Consulta en la base de datos los tipos de bebida existentes y los muestra en el panel de datos de la aplicación
      */
-    public void listarBodegaPeso( )
+   /* public void listarBodegaPeso( )
     {
     	try 
     	{
     		String id = JOptionPane.showInputDialog(this,"Id de la sucursal", "Adicionar Bodega",JOptionPane.QUESTION_MESSAGE);
     		Long idSucursal = Long.valueOf(id);
-			List<String> lista = superandes.indiceDeOcupacionPesoBodega(idSucursal);
+			List<String> lista = superandes(idSucursal);
 
 			String resultado = "En listarBodega estan:";
 			for(String dato : lista)
@@ -288,7 +462,7 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 			String resultado = generarMensajeError(e);
 			panelDatos.actualizarInterfaz(resultado);
 		}
-    }
+    }*/
 
     public void adicionarSucursal( )
     {

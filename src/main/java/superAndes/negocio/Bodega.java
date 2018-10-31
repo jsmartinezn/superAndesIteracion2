@@ -2,41 +2,31 @@ package superAndes.negocio;
 
 public class Bodega implements VOBodega {
 	
+	private Long id;
+	
 	private Long idSucursal;
 	
 	private String tipoProducto;
 	
 	private Double volumen;
 	
-	private Double volumenActual;
-	
-	
 	private Double peso;
 	
-	private Double pesoActual;
-	
-	
-	private Integer cantidad;
-	
 	public Bodega(){
+		this.id = (long)0;
 		this.idSucursal = (long) 0;
 		this.tipoProducto = "";
 		this.volumen = 0.0;
-		this.volumen = 0.0;
-		this.pesoActual = 0.0;
-		this.volumenActual = 0.0;
-		this.cantidad = 0;
+		this.peso = 0.0;
 	}
 	
-	public Bodega(Long id, String tipoProducto, Double volumen,Double volumen2, Double peso,Double peso2,Integer cantidad)
+	public Bodega(Long id, Long idSucrsal,String tipoProducto, Double volumen, Double peso)
 	{
+		this.id = idSucrsal;
 		this.idSucursal = id;
 		this.tipoProducto = tipoProducto;
 		this.volumen = volumen;
 		this.peso = peso;
-		this.pesoActual = peso2;
-		this.volumenActual = volumen2;
-		this.cantidad = cantidad;
 	}
 
 	public Long getIdSucursal() {
@@ -71,27 +61,11 @@ public class Bodega implements VOBodega {
 		this.peso = peso;
 	}
 
-	public Double getVolumenActual() {
-		return volumenActual;
+	public Long getId() {
+		return id;
 	}
 
-	public void setVolumenActual(Double volumenActual) {
-		this.volumenActual = volumenActual;
-	}
-
-	public Double getPesoActual() {
-		return pesoActual;
-	}
-
-	public void setPesoActual(Double pesoActual) {
-		this.pesoActual = pesoActual;
-	}
-
-	public Integer getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

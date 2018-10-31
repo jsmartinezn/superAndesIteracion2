@@ -1,14 +1,14 @@
 package superAndes.persistencia;
 
-import java.util.Date;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import superAndes.negocio.Compra;
 
-class SQLCompra {
-	
+import superAndes.negocio.EstanteProducto;
+
+public class SQLEstanteProducto {
 	/* ****************************************************************
 	 * 			Constantes
 	 *****************************************************************/
@@ -33,7 +33,7 @@ class SQLCompra {
 	 * Constructor
 	 * @param pp - El Manejador de persistencia de la aplicación
 	 */
-	public SQLCompra (PersistenciaSuperAndes pp)
+	public SQLEstanteProducto (PersistenciaSuperAndes pp)
 	{
 		this.pp = pp;
 	}
@@ -47,26 +47,27 @@ class SQLCompra {
 	 * @param horario - EL horario en que se realizó la visita (DIURNO, NOCTURNO, TODOS)
 	 * @return EL número de tuplas insertadas
 	 */
-	public long adicionarCompra (PersistenceManager pm,Long id, Long idC, Long idS,Date fecha) 
+	public long adicionarEstanteProducto (PersistenceManager pm,Long idEstante,Long idProducto,Integer cantidad) 
 	{
-        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaCompra () + "(id, id_cliente, id_sucursal, fecha) values (?, ?, ?, ?)");
-        q.setParameters(id,idC,idS,fecha);
+        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaEstanteProducto () + "(id_producto,id_estante, cantidad) values (?, ?, ?)");
+        q.setParameters(idProducto,idEstante,cantidad);
+
         return (long) q.executeUnique();
 	}
-
-	public List<Compra> darDineroTiempo(PersistenceManager pm,Date fechaI,Date fechaF)
-	{
-		Query q = pm.newQuery(SQL, "SELECT idSucursal, cantidad, precio FROM" + pp.darTablaCompra() + "WHERE fecha > ? AND fecha < ? ");
-		q.setResultClass(Compra.class);
-		q.setParameters(fechaI,fechaF);
-		return  q.executeList();
+	public List<Object[]> unidadesEnInventario(PersistenceManager pm, Long idSucursal,Long idProducto){
+		String a = "SELECT ID_ESTANTE,CANTIDAD FROM ";
+		a += pp.darTablaEstanteProducto() + "," + pp.darTablaEstante();
+		a+=" WHERE ID_PRODUCTO = ? AND ESTANTE.ID=ESTANTE_PRODUCTO.ID_ESTANTE AND ESTANTE.ID_SUCURSAL=?";
+		
+		Query q = pm.newQuery(SQL,a);
+		q.setResultClass(Object[].class);
+		q.setParameters(idProducto,idSucursal);
+		return q.executeList();
 	}
-	
-	public List<Compra> darDineroPorCliente(PersistenceManager pm,Date fechaI,Date fechaF,Long idCliente)
-	{
-		Query q = pm.newQuery(SQL, "SELECT * FROM" + pp.darTablaCompra() + "WHERE fecha > ? AND fecha < ? AND idCliente = ?");
-		q.setResultClass(Compra.class);
-		q.setParameters(fechaI,fechaF,idCliente);
-		return  q.executeList();
-	}
+	public void actualizar(PersistenceManager pm,Long idEstante,Long idProducto,Integer cantidad){
+		Query q = pm.newQuery(SQL, "UPDATE "+ pp.darTablaEstanteProducto()+" SET CANTIDAD = ? WHERE ID_ESTANTE = ? AND ID_PRODUCTO = ?");
+		q.setParameters(cantidad,idEstante,idProducto);
+		q.executeUnique();
+	}	
 }
+

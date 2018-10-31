@@ -36,7 +36,9 @@ import superAndes.negocio.SuperAndes;
 import superAndes.negocio.VOBodega;
 import superAndes.negocio.VOBodegaProducto;
 import superAndes.negocio.VOCompra;
+import superAndes.negocio.VOEmpresa;
 import superAndes.negocio.VOEstante;
+import superAndes.negocio.VOPersonaNatural;
 
 /**
  * Clase principal de la interfaz
@@ -437,24 +439,49 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 			panelDatos.actualizarInterfaz(resultado);
 		}
     }
+  
     /**
-     * Consulta en la base de datos los tipos de bebida existentes y los muestra en el panel de datos de la aplicación
+     * Adiciona un tipo de bebida con la información dada por el usuario
+     * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
      */
-   /* public void listarBodegaPeso( )
+    public void adicionarCliente( )
     {
     	try 
     	{
-    		String id = JOptionPane.showInputDialog(this,"Id de la sucursal", "Adicionar Bodega",JOptionPane.QUESTION_MESSAGE);
-    		Long idSucursal = Long.valueOf(id);
-			List<String> lista = superandes(idSucursal);
-
-			String resultado = "En listarBodega estan:";
-			for(String dato : lista)
-			{
-				resultado += "\n" + dato;
-			}
-			panelDatos.actualizarInterfaz(resultado);
-			resultado += "\n Operación terminada";
+    		String id = JOptionPane.showInputDialog(this,"Escriba\n1Si es Persona Natura\n2Si es empresa", "Adicionar Cliente",JOptionPane.QUESTION_MESSAGE);
+    		Integer resp = Integer.valueOf(id);
+    		
+    		if (resp == 1)
+    		{
+    			String nombre = JOptionPane.showInputDialog(this, "Nombre del Cliente", "Adicionar Persona Natural", JOptionPane.QUESTION_MESSAGE);
+        		String correo = JOptionPane.showInputDialog(this, "Correo del cliente", "Adicionar Persona Natural", JOptionPane.QUESTION_MESSAGE);
+        		String cedula = JOptionPane.showInputDialog(this, "Cedula del cliente", "Adicionar Persona Natural", JOptionPane.QUESTION_MESSAGE);
+        		VOPersonaNatural tb = superandes.adicionarPersona(nombre, correo, Long.valueOf(cedula));
+        		if (tb == null)
+        		{
+        			throw new Exception ("Se el cliente " + nombre);
+        		}
+        		String resultado = "En adicionar Cliente\n\n";
+        		resultado += "Cliente adicionado exitosamente: " + tb;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
+    		else if(resp == 2)
+    		{
+    			String nombre = JOptionPane.showInputDialog(this, "Nombre de la empresa", "Adicionar Empresa", JOptionPane.QUESTION_MESSAGE);
+        		String correo = JOptionPane.showInputDialog(this, "Correo de la empresa", "Adicionar Empresa", JOptionPane.QUESTION_MESSAGE);
+        		String nit = JOptionPane.showInputDialog(this, "NIT de la empresa", "Adicionar Empresa", JOptionPane.QUESTION_MESSAGE);
+        		String direccion = JOptionPane.showInputDialog(this, "Direccion de la empresa", "Adicionar Empresa", JOptionPane.QUESTION_MESSAGE);
+        		VOEmpresa tb = superandes.adicionarEmpresa(nombre, correo, Long.valueOf(nit),direccion);
+        		if (tb == null)
+        		{
+        			throw new Exception ("Se adiciono la empresa: " + nombre);
+        		}
+        		String resultado = "En adicionar Cliente\n\n";
+        		resultado += "Cliente adicionado exitosamente: " + tb;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
 		} 
     	catch (Exception e) 
     	{
@@ -462,7 +489,7 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 			String resultado = generarMensajeError(e);
 			panelDatos.actualizarInterfaz(resultado);
 		}
-    }*/
+    }
 
     public void adicionarSucursal( )
     {

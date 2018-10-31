@@ -100,7 +100,7 @@ public class SuperAndes {
 			resp.add(compra);
 		return resp;
 	}
-	
+	//
 	public Empresa adicionarEmpresa(String nombre, String correo, Long nit,String direccion){
 		return pp.adicionarEmpresa(nombre, correo, nit, direccion);
 	}
@@ -108,17 +108,13 @@ public class SuperAndes {
 	public Estante adicionarEstante(Long idSucursal,String tipoProducto,Double volumen,Double peso,Double nivelReOrden){
 		return pp.adicionarEstante(idSucursal,tipoProducto, volumen, peso,nivelReOrden);
 	}
-/*	
-	public List<String> indiceDeOcupacionPesoEstante(Long idSucursal){
-		return pp.indiceDeOcupacionPesoEstante(idSucursal);
-	}
-	
-	public List<String> indiceDeOcupacionVolumenEstante(Long idSucursal){
-		return pp.indiceDeOcupacionVolumenEstante(idSucursal);
-	}*/
 	
 	public OrdenPedido adicionarOrdenPedido(Long idProveedor,Long idSucursal,Date fechaEsperada, String estado){
 		return pp.adicionarOrdenPedido(idProveedor, idSucursal, fechaEsperada, estado);
+	}
+	
+	public PersonaNatural adicionarPersona(String nombre, String correo, Long cedula){
+		return pp.adicionarPersona(nombre, correo, cedula);
 	}
 	
 	public Producto adicionarProducto(Long codigoB, String nombre, String marca, String presentacion, Double precioUM, String UM,Integer cantdadP,Double volumen, Double peso, String catrgoria)
@@ -180,7 +176,5 @@ public class SuperAndes {
 		return resp;
 	}	
 	
-	public PersonaNatural adicionarPersona(String nombre, String correo, Long cedula){
-		return pp.adicionarPersona(nombre, correo, cedula);
-	}
+
 }

@@ -35,6 +35,10 @@
 				{
 					"label": "Volumen_Estante",
 					"event": "indiceDeOcupacionVolumenEstante"
+				},
+				{
+					"label": "Cliente",
+					"event": "adicionarCliente"
 				}					
 			]
 		},

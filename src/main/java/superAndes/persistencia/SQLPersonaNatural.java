@@ -62,7 +62,7 @@ class SQLPersonaNatural {
 	}
 	
 	public long adicionar(PersistenceManager pm, Long id, String nombre, String correo, Long cedula) {
-		Query q = pm.newQuery(SQL,"INSERT INTO" + pp.darTablaPersonaNatural() + "(id, nombre, correo, cedula) values (?, ?, ?, ?)");
+		Query q = pm.newQuery(SQL,"INSERT INTO " + pp.darTablaPersonaNatural() + "(id, nombre, correo, cedula) values (?, ?, ?, ?)");
 		q.setParameters(id,nombre,correo,cedula);
 		return (long)q.executeUnique();
 	}

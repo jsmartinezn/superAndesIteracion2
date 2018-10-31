@@ -189,7 +189,7 @@ public class PersistenciaSuperAndes {
 	}
 	public String darTablaPersonaNatural()
 	{
-		return tablas.get(6);
+		return tablas.get(8);
 	}
 	public String darTablaCompra()
 	{
@@ -197,7 +197,7 @@ public class PersistenciaSuperAndes {
 	}
 	public String darTablaEmpresa()
 	{
-		return tablas.get(3);
+		return tablas.get(9);
 	}
 	public String darTablaEstante()
 	{
@@ -567,11 +567,28 @@ public class PersistenciaSuperAndes {
                 	}
                 	
                 }
-                Integer nivelReOrden = 6;//Se necesita la clase sucursal-producto para esto esperar compañero
+                Integer nivelReOrden = 10;//Se necesita la clase sucursal-producto para esto esperar compañero
                 if(disp<nivelReOrden){
-                	double indice = 0.0;
-                	
+                	List<Object[]> orden = sqlBodega.reOrden(pm, idS, idP);
+                	Integer ayuda3 = 0;
+                	for(Object[] temp : orden){
+	                	BigDecimal cant = (BigDecimal) temp[1];
+	                	BigDecimal pesoP = (BigDecimal) temp[2];
+	                	BigDecimal volP = (BigDecimal) temp[3];
+	                	BigDecimal pesoB = (BigDecimal) temp[4];
+	                	BigDecimal volB = (BigDecimal) temp[5];
+	                	Double dispPeso = (pesoB.doubleValue()-cant.doubleValue()*pesoP.doubleValue())/pesoP.doubleValue();
+	                	Double dispVol = (volB.doubleValue()-cant.doubleValue()*volP.doubleValue())/volP.doubleValue();
+	                	if(dispPeso>dispVol){
+	                		ayuda3 += dispVol.intValue();
+	                	}
+	                	else{
+	                		ayuda3 += dispPeso.intValue();
+	                	}
+                	}
+                	//generar pedido con ayuda3 unidades
                 }
+                
             }
             else{
             	tx.rollback();

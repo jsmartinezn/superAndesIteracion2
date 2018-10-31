@@ -35,7 +35,7 @@ class SQLEmpresa {
 	}
 	
 	public long adicionar(PersistenceManager pm, Long id, String nombre, String correo, Long nit,String direccion) {
-		Query q = pm.newQuery(SQL,"INSERT INTO" + pp.darTablaEmpresa() + "(id, nombre, correo, nit, direccion) values (?, ?, ?, ?, ?)");
+		Query q = pm.newQuery(SQL,"INSERT INTO " + pp.darTablaEmpresa() + "(id, nombre, correo, nit, direccion) values (?, ?, ?, ?, ?)");
 		q.setParameters(id,nombre,correo,nit,direccion);
 		return (long) q.executeUnique();
 	}

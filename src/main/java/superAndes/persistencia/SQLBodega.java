@@ -83,8 +83,17 @@ class SQLBodega {
 		q.setResultClass(Indice.class);
 		return q.executeList();
 	}
-	
-	
+	public List<Object[]> reOrden(PersistenceManager pm, Long idSucursal, Long idProducto)
+	{
+		String a = "SELECT BODEGA_PRODUCTO.ID_BODEGA, BODEGA_PRODUCTO.CANTIDAD,PRODUCTO.PESO,PRODUCTO.VOLUMEN,BODEGA.PESO,BODEGA.VOLUMEN FROM ";
+		a += pp.darTablaBodegaProducto() + "," + pp.darTablaBodega() + "," + pp.darTablaProducto();
+		a += " WHERE BODEGA_PRODUCTO.ID_PRODUCTO=PRODUCTO.ID AND BODEGA.ID=BODEGA_PRODUCTO.ID_BODEGA AND BODEGA.ID_SUCURSAL = ? AND PRODUCTO.ID = ?";
+		Query q = pm.newQuery(SQL, a);
+		q.setParameters(idSucursal,idProducto);
+		q.setResultClass(Object[].class);
+		return q.executeList();
+	}
+		
 	public List<Bodega> darBodega(PersistenceManager pm,Long idSucursal)
 	{
 		Query q = pm.newQuery(SQL, "SELECT FROM" + pp.darTablaBodega() + "WHERE idsucursal = ?");

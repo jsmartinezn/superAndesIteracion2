@@ -213,7 +213,7 @@ public class PersistenciaSuperAndes {
 	}
 	public String darTablaProducto()
 	{
-		return tablas.get(6);
+		return tablas.get(7);
 	}
 	public String darTablaProductoProvedor()
 	{
@@ -503,7 +503,7 @@ public class PersistenciaSuperAndes {
                 	BigDecimal idEstante = (BigDecimal) disponible.get(i)[0];
             		if(cantidad2>ayuda.intValue()){
             			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, 0);
-            			cantidad2-=idEstante.longValue();
+            			cantidad2-=ayuda.intValue();
             		}
             		else{
             			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, ayuda.intValue()-cantidad2);
@@ -512,13 +512,64 @@ public class PersistenciaSuperAndes {
             		}
             	}
             	disp-=cantidad;
+            	Integer dispBodega = 0;
             	List<Object[]> lista = sqlBodegaProducto.unidadesEnInventario(pm, idS, idP);
                 for(Object[] temp : lista){
                 	BigDecimal ayuda = (BigDecimal) temp[1];
                 	disp += ayuda.intValue();
+                	dispBodega += ayuda.intValue();
+                }
+                List<Object[]> reOrdenE = sqlEstante.reOrden(pm, idS, idP);
+                int i = 0;
+                for(Object[]temp : reOrdenE)
+                {
+                	BigDecimal idE = (BigDecimal) temp[0];
+                	BigDecimal cant = (BigDecimal) temp[1];
+                	BigDecimal pesoP = (BigDecimal) temp[2];
+                	BigDecimal volP = (BigDecimal) temp[3];
+                	BigDecimal pesoE = (BigDecimal) temp[4];
+                	BigDecimal volE = (BigDecimal) temp[5];
+                	BigDecimal niv = (BigDecimal) temp[6];
+	                if(cant.doubleValue()*volP.doubleValue()/volE.doubleValue()<niv.doubleValue()){
+	                	Double dispPeso = (pesoE.doubleValue()-cant.doubleValue()*pesoP.doubleValue())/pesoP.doubleValue();
+	                	Double dispVol = (volE.doubleValue()-cant.doubleValue()*volP.doubleValue())/volP.doubleValue();
+	                	Integer ayuda3 = 0;
+	                	if(dispPeso>dispVol){
+	                		ayuda3 = dispVol.intValue();
+	                	}
+	                	else{
+	                		ayuda3 = dispPeso.intValue();
+	                	}
+	                	if(dispBodega > ayuda3)
+	                	{
+	                		sqlEstanteProducto.actualizar(pm, idE.longValue(), idP, cant.intValue()+ayuda3);
+	                	}
+	                	else{
+	                		sqlEstanteProducto.actualizar(pm, idE.longValue(), idP, cant.intValue()+dispBodega);
+	                		ayuda3 = dispBodega;
+	                		dispBodega = 0;
+	                	}
+	                	boolean b = false;
+	                	for(; i < lista.size() && !b;i++)
+	                	{
+	                      	BigDecimal ayuda = (BigDecimal) lista.get(i)[1];
+	                       	BigDecimal idEstante = (BigDecimal) lista.get(i)[0];
+	                    	if(ayuda3>ayuda.intValue()){
+	                    		sqlBodegaProducto.actualizar(pm, idEstante.longValue(),idP, 0);
+	                    		ayuda3-=ayuda.intValue();
+	                    	}
+	                       	else{
+	                       		sqlBodegaProducto.actualizar(pm, idEstante.longValue(),idP, ayuda.intValue()-ayuda3);
+	                       		b = true;
+	                       		ayuda3=0;
+	                       	}
+	                	}	                	
+                	}
+                	
                 }
                 Integer nivelReOrden = 6;//Se necesita la clase sucursal-producto para esto esperar compañero
                 if(disp<nivelReOrden){
+                	double indice = 0.0;
                 	
                 }
             }

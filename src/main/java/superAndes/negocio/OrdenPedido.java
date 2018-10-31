@@ -14,6 +14,12 @@ public class OrdenPedido implements VOOrdenPedido{
 	
 	private Long idSucursal;
 	
+	private Long idProducto;
+	
+	private Integer cantidad;
+	
+	private Double precioUnitario;
+	
 	private Date fechaEspEntrega;
 	
 	private Date fechaEntrega;

@@ -61,4 +61,10 @@ public class SQLBodegaProducto {
 		q.setParameters(idProducto,idSucursal);
 		return q.executeList();
 	}
+	
+	public void actualizar(PersistenceManager pm,Long idBodega,Long idProducto,Integer cantidad){
+		Query q = pm.newQuery(SQL, "UPDATE "+ pp.darTablaBodegaProducto()+" SET CANTIDAD = ? WHERE ID_BODEGA = ? AND ID_PRODUCTO = ?");
+		q.setParameters(cantidad,idBodega,idProducto);
+		q.executeUnique();
+	}	
 }

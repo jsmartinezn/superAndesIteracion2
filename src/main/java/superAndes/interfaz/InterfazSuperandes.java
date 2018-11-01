@@ -35,6 +35,8 @@ import com.google.gson.stream.JsonReader;
 import superAndes.negocio.SuperAndes;
 import superAndes.negocio.VOBodega;
 import superAndes.negocio.VOBodegaProducto;
+import superAndes.negocio.VOCarritoCompras;
+import superAndes.negocio.VOCarritoComprasProducto;
 import superAndes.negocio.VOCompra;
 import superAndes.negocio.VOEmpresa;
 import superAndes.negocio.VOEstante;
@@ -491,39 +493,104 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 		}
     }
 
-    public void adicionarSucursal( )
-    {
-    	try 
-    	{
-    		String id = JOptionPane.showInputDialog(this,"Id de la sucursal", "Adicionar Bodega",JOptionPane.QUESTION_MESSAGE);
-    		Long idSucursal = Long.valueOf(id);
-    		String tipoProducto = JOptionPane.showInputDialog (this, "Tipo del producto", "Adicionar tipo de bebida", JOptionPane.QUESTION_MESSAGE);
-    		String volumen = JOptionPane.showInputDialog(this, "Capacidad de volumen total en cm3", "Adicionar tipo de bebida", JOptionPane.QUESTION_MESSAGE);
-    		String peso = JOptionPane.showInputDialog(this, "Capacidad de peso total en kg", "Adicionar tipo de bebida", JOptionPane.QUESTION_MESSAGE);
-    		if (id != null)
-    		{
-        		VOBodega tb = superandes.adicionarBodega(idSucursal, tipoProducto, Double.valueOf(volumen), Double.valueOf(peso));
-        		if (tb == null)
-        		{
-        			throw new Exception ("No se pudo crear un tipo de bodega de: " + tipoProducto);
-        		}
-        		String resultado = "En adicionarTipoBebida\n\n";
-        		resultado += "Tipo de bebida adicionado exitosamente: " + tb;
+    public void asignarCarrito(){
+    	try{
+    		String idCliente = JOptionPane.showInputDialog(this,"Id Cliente", "Asignar Carro",JOptionPane.QUESTION_MESSAGE);
+    		String idSucursal = JOptionPane.showInputDialog(this,"Id Sucursal", "Quitar Carro",JOptionPane.QUESTION_MESSAGE);
+    		VOCarritoCompras carro = superandes.asignarCarro(Long.valueOf(idCliente),Long.valueOf(idSucursal));
+    		if(carro == null)
+    			JOptionPane.showMessageDialog(this, "Todos los carros estan ocupados");
+    		else{
+        		String resultado = "En asignar carro\n\n";
+        		resultado += "Se asigno el carro: " + carro;
     			resultado += "\n Operación terminada";
     			panelDatos.actualizarInterfaz(resultado);
     		}
-    		else
-    		{
-    			panelDatos.actualizarInterfaz("Operación cancelada por el usuario");
-    		}
-		} 
-    	catch (Exception e) 
+    	}catch (Exception e) 
     	{
 //			e.printStackTrace();
 			String resultado = generarMensajeError(e);
 			panelDatos.actualizarInterfaz(resultado);
 		}
     }
+    public void quitarCarrito(){
+    	try{
+    		String idCliente = JOptionPane.showInputDialog(this,"Id Cliente", "Quitar Carro",JOptionPane.QUESTION_MESSAGE);
+    		String idSucursal = JOptionPane.showInputDialog(this,"Id Sucursal", "Quitar Carro",JOptionPane.QUESTION_MESSAGE);
+    		VOCarritoCompras carro = superandes.quitarCarro(Long.valueOf(idCliente),Long.valueOf(idSucursal));
+    		if(carro == null)
+    			JOptionPane.showMessageDialog(this, "Todos los carros estan ocupados");
+    		else{
+        		String resultado = "En asignar carro\n\n";
+        		resultado += "Se asigno el carro: " + carro;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
+    	}catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
+    public void agregarProductoCarrito(){
+    	try{
+    		String idProducto = JOptionPane.showInputDialog(this,"Id Producto", "Agregar Producto",JOptionPane.QUESTION_MESSAGE);
+    		String idCarrito = JOptionPane.showInputDialog(this,"Id Carrito", "Agregar Producto",JOptionPane.QUESTION_MESSAGE);
+    		String cantidad = JOptionPane.showInputDialog(this,"Cantidad a añadir", "Agregar Producto",JOptionPane.QUESTION_MESSAGE);
+    		VOCarritoComprasProducto carro = superandes.asignarProducto(Long.valueOf(idProducto), Long.valueOf(idCarrito), Integer.valueOf(cantidad));
+    		if(carro == null)
+    			JOptionPane.showMessageDialog(this, "Todos los carros estan ocupados");
+    		else{
+        		String resultado = "En asignar carro\n\n";
+        		resultado += "Se asigno el carro: " + carro;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
+    	}catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
+    
+    public void quitarProductoCarrito(){
+    	try{
+    		String idProducto = JOptionPane.showInputDialog(this,"Id Producto", "Agregar Producto",JOptionPane.QUESTION_MESSAGE);
+    		String idCarrito = JOptionPane.showInputDialog(this,"Id Carrito", "Agregar Producto",JOptionPane.QUESTION_MESSAGE);
+    		superandes.quitarProducto(Long.valueOf(idProducto), Long.valueOf(idCarrito));
+
+        		String resultado = "En quitar producto\n\n";
+        		resultado += "Se quito el producto";
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		
+    	}catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
+    public void pagarCarrito(){
+    	try{
+    		String idCarrito = JOptionPane.showInputDialog(this,"Id Carrito", "Pagar Carrito",JOptionPane.QUESTION_MESSAGE);
+    		superandes.pagarCarrito(Long.valueOf(idCarrito), new Date(System.currentTimeMillis()));;
+
+        		String resultado = "Se pago el carrito\n\n";
+        		resultado += idCarrito;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		
+    	}catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
+    
 
 	/* ****************************************************************
 	 * 			Métodos administrativos
@@ -576,38 +643,6 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 		resultado += "\nLimpieza terminada";
 
 		panelDatos.actualizarInterfaz(resultado);
-	}
-	
-	/**
-	 * Limpia todas las tuplas de todas las tablas de la base de datos de parranderos
-	 * Muestra en el panel de datos el número de tuplas eliminadas de cada tabla
-	 
-	public void limpiarBD ()
-	{
-		try 
-		{
-    		// Ejecución de la demo y recolección de los resultados
-			long eliminados [] = parranderos.limpiarParranderos();
-			
-			// Generación de la cadena de caracteres con la traza de la ejecución de la demo
-			String resultado = "\n\n************ Limpiando la base de datos ************ \n";
-			resultado += eliminados [0] + " Gustan eliminados\n";
-			resultado += eliminados [1] + " Sirven eliminados\n";
-			resultado += eliminados [2] + " Visitan eliminados\n";
-			resultado += eliminados [3] + " Bebidas eliminadas\n";
-			resultado += eliminados [4] + " Tipos de bebida eliminados\n";
-			resultado += eliminados [5] + " Bebedores eliminados\n";
-			resultado += eliminados [6] + " Bares eliminados\n";
-			resultado += "\nLimpieza terminada";
-   
-			panelDatos.actualizarInterfaz(resultado);
-		} 
-		catch (Exception e) 
-		{
-//			e.printStackTrace();
-			String resultado = generarMensajeError(e);
-			panelDatos.actualizarInterfaz(resultado);
-		}
 	}
 	
 	/**

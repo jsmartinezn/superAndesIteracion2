@@ -22,6 +22,8 @@ import oracle.net.aso.p;
 import oracle.net.aso.v;
 import superAndes.negocio.Bodega;
 import superAndes.negocio.BodegaProducto;
+import superAndes.negocio.CarritoCompras;
+import superAndes.negocio.CarritoComprasProducto;
 import superAndes.negocio.Compra;
 import superAndes.negocio.Empresa;
 import superAndes.negocio.Estante;
@@ -105,6 +107,10 @@ public class PersistenciaSuperAndes {
 	private SQLSucursal sqlSucursal;
 	
 	private SQLSucursalProducto sqlSucursalProducto;
+	
+	private SQLCarritoCompras sqlCarritoCompras;
+	
+	private SQLCarritoComprasProducto sqlCarritoComprasProducto;
 	
 	private PersistenciaSuperAndes()
 	{
@@ -207,6 +213,13 @@ public class PersistenciaSuperAndes {
 	{
 		return tablas.get(6);
 	}
+	public String darTablaCarrito() {
+		return tablas.get(10);
+	}
+	public String darTablaCarritoProducto() {
+		
+		return tablas.get(11);
+	}
 	public String darTablaOrdenPedido()
 	{
 		return tablas.get(5);
@@ -250,6 +263,8 @@ public class PersistenciaSuperAndes {
 		sqlBodegaProducto = new SQLBodegaProducto(this);
 		sqlCompra = new SQLCompra(this);
 		sqlCompraProducto = new SQLCompraProducto(this);
+		sqlCarritoCompras = new SQLCarritoCompras(this);
+		sqlCarritoComprasProducto = new SQLCarritoComprasProducto(this);
 		sqlEmpresa = new SQLEmpresa(this);
 		sqlEstante = new SQLEstante(this);
 		sqlEstanteProducto = new SQLEstanteProducto(this);
@@ -477,7 +492,7 @@ public class PersistenciaSuperAndes {
         
 	}
 	
-	public Compra adicionarCompra(Long idC, Long idS,Long idP, Integer cantidad,Date fecha){
+	public Compra adicionarCompra(Long idC, Long idS,Long idP, Integer cantidad,Date fecha,boolean a){
 		PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx=pm.currentTransaction();
         try
@@ -497,20 +512,8 @@ public class PersistenciaSuperAndes {
             {
             	//Actualizar Estante
             	int cantidad2 = 0 + cantidad;
-            	boolean a = false;
-            	for(int i = 0;i < disponible.size() && !a;i++){
-                	BigDecimal ayuda = (BigDecimal) disponible.get(i)[1];
-                	BigDecimal idEstante = (BigDecimal) disponible.get(i)[0];
-            		if(cantidad2>ayuda.intValue()){
-            			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, 0);
-            			cantidad2-=ayuda.intValue();
-            		}
-            		else{
-            			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, ayuda.intValue()-cantidad2);
-            			a = true;
-            			cantidad2=0;
-            		}
-            	}
+            	if(a)
+            		abastecerEstante(pm, cantidad2, disponible, idP);
             	disp-=cantidad;
             	Integer dispBodega = 0;
             	List<Object[]> lista = sqlBodegaProducto.unidadesEnInventario(pm, idS, idP);
@@ -685,28 +688,7 @@ public class PersistenciaSuperAndes {
             pm.close();
         }
 	}
-	/*
-	public List<String> indiceDeOcupacionVolumenEstante(Long idSucursal){
-		
-		List<Estante> nueva = sqlEstante.darEstante(pmf.getPersistenceManager(), idSucursal);
-		ArrayList<String> resp = new ArrayList<>();
-		for(Estante a : nueva)
-		{
-			resp.add("El indice del producto " + a.getTipoProducto() + " es: " + a.getVolumenActual()/a.getVolumen());
-		}
-		return resp;
-	}
-	
-	public List<String> indiceDeOcupacionPesoEstante(Long idSucursal){
-		List<Estante> nueva = sqlEstante.darEstante(pmf.getPersistenceManager(), idSucursal);
-		ArrayList<String> resp = new ArrayList<>();
-		for(Estante a : nueva)
-		{
-			resp.add("El indice del producto " + a.getTipoProducto() + " es: " + a.getPesoActual()/a.getPeso());
-		}
-		return resp;
-	}
-	*/
+
 	public OrdenPedido adicionarOrdenPedido(Long idProveedor,Long idSucursal,Date fechaEsperada, String estado){
 		PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx=pm.currentTransaction();
@@ -990,5 +972,206 @@ public class PersistenciaSuperAndes {
 	public List<Producto> darProductoPorCondicion(String condicion){
 		PersistenceManager pm = pmf.getPersistenceManager();
 		return sqlProducto.darProductoCondicion(pm, condicion);
+	}
+
+	public CarritoCompras asignarCarro(Long idCliente,Long idSucursal)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+		try
+        {
+            tx.begin();
+            CarritoCompras resp = sqlCarritoCompras.asignarCarrito(pm, idCliente,idSucursal);
+            tx.commit();
+            return resp;
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+	}
+	public CarritoCompras quitarCarro(Long idCliente,Long idSucursal)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+		try
+        {
+            tx.begin();
+            CarritoCompras resp = sqlCarritoCompras.quitarCarrito(pm, idCliente,idSucursal);
+            tx.commit();
+            return resp;
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+	}
+
+	public CarritoComprasProducto agregarProducto(Long idProducto,Long idCarrito,Integer cantidad){
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+		try
+        {
+            tx.begin();
+            BigDecimal t = (BigDecimal)sqlCarritoCompras.darSucursal(pm, idCarrito);
+            List<Object[]> disponible = sqlEstanteProducto.unidadesEnInventario(pm,t.longValue() , idProducto);
+            Integer disp = 0;
+            //Revisar si existe la cantidad del producto deseado en los estantes, arroja excepcion de lo contrario
+            for(Object[] temp : disponible){
+            	BigDecimal ayuda = (BigDecimal) temp[1];
+            	disp += ayuda.intValue();
+            }
+            if(cantidad<=disp)
+            {
+            	abastecerEstante(pm, cantidad, disponible, idProducto);
+            	long resp = sqlCarritoComprasProducto.adicionarProducto(pm, idProducto, idCarrito, cantidad);
+            	
+            }
+            
+            tx.commit();
+            return new CarritoComprasProducto(idCarrito, idProducto, cantidad);
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        	return null;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+	}
+	public void quitarProducto(Long idProducto,Long idCarrito){
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+		try
+        {
+            tx.begin();
+            Integer cantidad = sqlCarritoComprasProducto.darCantidad(pm, idProducto, idCarrito);
+            BigDecimal t = (BigDecimal)sqlCarritoCompras.darSucursal(pm, idCarrito);
+            sqlCarritoComprasProducto.quitarProducto(pm, idProducto, idCarrito);
+            List<Object[]> reOrdenE = sqlEstante.reOrden(pm, t.longValue(), idProducto);
+            boolean salir = false;
+            for(int i = 0;i < reOrdenE.size() && !salir;i++)
+            {
+            	Object[] temp = reOrdenE.get(i);
+            	BigDecimal idE = (BigDecimal) temp[0];
+            	BigDecimal cant = (BigDecimal) temp[1];
+            	BigDecimal pesoP = (BigDecimal) temp[2];
+            	BigDecimal volP = (BigDecimal) temp[3];
+            	BigDecimal pesoE = (BigDecimal) temp[4];
+            	BigDecimal volE = (BigDecimal) temp[5];
+                Double dispPeso = (pesoE.doubleValue()-cant.doubleValue()*pesoP.doubleValue())/pesoP.doubleValue();
+                Double dispVol = (volE.doubleValue()-cant.doubleValue()*volP.doubleValue())/volP.doubleValue();
+                Integer ayuda3 = 0;
+                if(dispPeso>dispVol){
+                	ayuda3 = dispVol.intValue();
+                }
+                else{
+                	ayuda3 = dispPeso.intValue();
+                }
+                if(ayuda3>cantidad)
+                {
+                	sqlEstanteProducto.actualizar(pm, idE.longValue(),idProducto, cant.intValue()+cantidad);
+                	salir = true;
+                }
+                else
+                {
+                	sqlEstanteProducto.actualizar(pm, idE.longValue(),idProducto, cant.intValue()+ayuda3);
+                	cantidad -= ayuda3;
+                }
+                
+            }
+            tx.commit();
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+	}
+	
+	public void pagarCarrito(Long idCarrito,Date fecha)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+		try
+        {
+			tx.begin();
+			Object[] info = sqlCarritoCompras.darCarrito(pm, idCarrito);
+			BigDecimal idCliente = (BigDecimal) info[1];
+			BigDecimal idSucursal = (BigDecimal)info[0];
+			List<Object[]> lista = sqlCarritoComprasProducto.pagar(pm, idCarrito);
+			for(Object[] temp: lista){
+				BigDecimal idProducto = (BigDecimal)temp[0];
+				BigDecimal cantidad = (BigDecimal) temp[1];
+				Compra actual = adicionarCompra(idCliente.longValue(), idSucursal.longValue(), idProducto.longValue(), cantidad.intValue(), fecha,false);
+			}
+			tx.commit();
+        }catch(Exception e)
+        {
+        	e.printStackTrace();
+        	log.error ("Exception : " + e.getMessage() + "\n" + darDetalleException(e));
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+		
+	}
+	
+	public void abastecerEstante(PersistenceManager pm,Integer cantidad2,List<Object[]> disponible,Long idP)
+	{
+    	boolean a = false;
+    	for(int i = 0;i < disponible.size() && !a;i++){
+        	BigDecimal ayuda = (BigDecimal) disponible.get(i)[1];
+        	BigDecimal idEstante = (BigDecimal) disponible.get(i)[0];
+    		if(cantidad2>ayuda.intValue()){
+    			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, 0);
+    			cantidad2-=ayuda.intValue();
+    		}
+    		else{
+    			sqlEstanteProducto.actualizar(pm, idEstante.longValue(),idP, ayuda.intValue()-cantidad2);
+    			a = true;
+    			cantidad2=0;
+    		}
+    	}
 	}
 }

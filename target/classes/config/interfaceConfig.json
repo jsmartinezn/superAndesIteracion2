@@ -39,7 +39,28 @@
 				{
 					"label": "Cliente",
 					"event": "adicionarCliente"
-				}					
+				},
+				{
+					"label": "Asignar Carro",
+					"event": "asignarCarrito"
+				},
+				{
+					"label": "Quitar Carro",
+					"event": "quitarCarrito"
+				},
+				{
+					"label": "Agregar Producto",
+					"event": "agregarProductoCarrito"
+				},
+				{
+					"label": "Quitar Producto",
+					"event": "quitarProductoCarrito"
+				},
+				{
+					"label": "Pagar Carrito",
+					"event": "pagarCarrito"
+				}
+									
 			]
 		},
 		{ "menuTitle": "Mantenimiento",

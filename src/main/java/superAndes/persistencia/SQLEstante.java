@@ -100,35 +100,4 @@ class SQLEstante {
 		q.setResultClass(Object[].class);
 		return q.executeList();
 	}
-	
-/*
-	public int actualizarVenta(PersistenceManager pm,Long idSucursal,Long idProducto,Integer cantidad,Integer cantidadMaxima)
-	{
-		int resp = 0;
-		Query q = pm.newQuery(SQL,"SELECT volumen,peso FROM "+ pp.darTablaProducto() + " WHERE id = ?");
-		q.setParameters(idProducto);
-		q.setResultClass(Producto.class);
-		Producto nuevo = (Producto) q.executeUnique();
-		Double volumen = nuevo.getVolumen();
-		Double peso = nuevo.getPeso();
-		Query p = pm.newQuery("SELECT volumen,volumenactual,peso,pesoactual,cantidad FROM "+ pp.darTablaEstante() + " WHERE tipoproducto = (SELECT tipoproducto FROM " + pp.darTablaProducto() + " WHERE id = ?) AND idSucursal = ? ");
-		p.setParameters(idProducto,idSucursal);
-		Estante temp = (Estante) p.executeUnique();
-		Integer max = temp.getCantidad() - cantidad;
-		if(max<temp.getNivelDeReOrden())
-		{
-			Double a = 0.0;
-			Double pesoDisponible = (temp.getPeso()-((temp.getCantidad()+cantidad)*peso));
-			Double volumenDisponible = (temp.getVolumen()-((temp.getCantidad()+cantidad)*peso));
-			a = pesoDisponible/peso < volumenDisponible/volumen ? pesoDisponible/peso : volumenDisponible/volumen;
-			max = a.intValue() > cantidadMaxima ? cantidadMaxima : a.intValue();
-			resp = max;
-		}
-		Integer cant = temp.getCantidad() +max;
-		Query t =pm.newQuery(SQL, "UPDATE " + pp.darTablaEstante() + " SET volumenactual = ?, pesoactual = ?, cantidad = ? WHERE tipoproducto = (SELECT tipoproducto FROM " + pp.darTablaProducto() + " WHERE id = ?) AND idSucursal = ? ");
-		t.setParameters(cant*volumen,cant*peso,cant,idProducto,idSucursal);
-		t.executeUnique();
-		return resp;
-	}
-*/
 }

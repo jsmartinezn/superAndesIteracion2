@@ -82,7 +82,7 @@ public class SuperAndes {
 	}
 	
 	public Compra adicionarCompra(Long idC, Long idS, Long idP,Integer cantidad,Date fecha){
-		return pp.adicionarCompra(idC, idS,idP,cantidad, fecha);
+		return pp.adicionarCompra(idC, idS,idP,cantidad, fecha,true);
 	}
 	
 	public List<VOCompra> darComprasFechas(Date fechaInicio,Date fechaFin){
@@ -168,6 +168,20 @@ public class SuperAndes {
 		return pp.realizarEntrega(id, fecha, calificacion, estado);
 	}
 	
+	public CarritoCompras asignarCarro(Long idCliente,Long idSucursal){
+		return pp.asignarCarro(idCliente,idSucursal);
+	}
+	public CarritoCompras quitarCarro(Long idCliente,Long idSucursal){
+		return pp.quitarCarro(idCliente,idSucursal);
+	}
+	public CarritoComprasProducto asignarProducto(Long idProducto,Long idCarrito,Integer cantidad){
+		return pp.agregarProducto(idProducto, idCarrito, cantidad);
+	}
+	public void quitarProducto(Long idProducto,Long idCarrito)
+	{
+		pp.quitarProducto(idProducto, idCarrito);
+	}
+	
 	public List<VOOrdenPedido> darOrdenes(){
 		List<OrdenPedido> temp = pp.darOrdenes();
 		List<VOOrdenPedido> resp = new LinkedList<>();
@@ -175,6 +189,8 @@ public class SuperAndes {
 			resp.add(nuevo);
 		return resp;
 	}	
-	
+	public void pagarCarrito(Long idCarrito,Date fecha){
+		pp.pagarCarrito(idCarrito, fecha);
+	}
 
 }

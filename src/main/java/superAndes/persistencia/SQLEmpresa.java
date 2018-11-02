@@ -34,9 +34,9 @@ class SQLEmpresa {
 		this.pp = pp;
 	}
 	
-	public long adicionar(PersistenceManager pm, Long id, String nombre, String correo, Long nit,String direccion) {
-		Query q = pm.newQuery(SQL,"INSERT INTO " + pp.darTablaEmpresa() + "(id, nombre, correo, nit, direccion) values (?, ?, ?, ?, ?)");
-		q.setParameters(id,nombre,correo,nit,direccion);
+	public long adicionar(PersistenceManager pm, String nombre, String correo, Long nit,String direccion) {
+		Query q = pm.newQuery(SQL,"INSERT INTO " + pp.darTablaCliente() + "(identificacion, nombre, correo_electronico, direccion) values (?, ?, ?, ?)");
+		q.setParameters(nit,nombre,correo,direccion);
 		return (long) q.executeUnique();
 	}
 

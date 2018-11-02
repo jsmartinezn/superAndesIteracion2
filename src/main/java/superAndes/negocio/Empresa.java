@@ -12,8 +12,8 @@ public class Empresa extends Cliente implements VOEmpresa{
 		this.direccion ="";
 	}
 
-	public Empresa(Long id, String nombre, String correo,Long nit,String direccion){
-		super(id,nombre,correo);
+	public Empresa(String nombre, String correo,Long nit,String direccion){
+		super(nombre,correo);
 		this.nit = nit;
 		this.direccion = direccion;
 	}

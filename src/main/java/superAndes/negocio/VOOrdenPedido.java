@@ -17,4 +17,10 @@ public interface VOOrdenPedido {
 	public Double getCalificacion();
 	
 	public String getEstado();
+	
+	public Long getIdProducto();
+	
+	public Integer getCantidad();
+	
+	public Double getPrecioUnitario();
 }

@@ -193,17 +193,14 @@ public class PersistenciaSuperAndes {
 	public String darTablaCompraProducto() {
 		return tablas.get(4);
 	}
-	public String darTablaPersonaNatural()
-	{
-		return tablas.get(8);
-	}
+
 	public String darTablaCompra()
 	{
 		return tablas.get(3);
 	}
-	public String darTablaEmpresa()
-	{
-		return tablas.get(9);
+
+	public String darTablaCliente() {
+		return tablas.get(8);
 	}
 	public String darTablaEstante()
 	{
@@ -214,11 +211,11 @@ public class PersistenciaSuperAndes {
 		return tablas.get(6);
 	}
 	public String darTablaCarrito() {
-		return tablas.get(10);
+		return tablas.get(9);
 	}
 	public String darTablaCarritoProducto() {
 		
-		return tablas.get(11);
+		return tablas.get(10);
 	}
 	public String darTablaOrdenPedido()
 	{
@@ -635,13 +632,12 @@ public class PersistenciaSuperAndes {
         try
         {
             tx.begin();
-            long idEmpresa = nextval ();
-            long tuplasInsertadas = sqlEmpresa.adicionar(pm, idEmpresa, nombre, correo, nit, direccion);
+            long tuplasInsertadas = sqlEmpresa.adicionar(pm, nombre, correo, nit, direccion);
             tx.commit();
             
-            log.trace ("Inserción de la empresa: " + idEmpresa + ": " + tuplasInsertadas + " tuplas insertadas");
+            log.trace ("Inserción de la empresa: " + nit + ": " + tuplasInsertadas + " tuplas insertadas");
             
-            return new Empresa(idEmpresa, nombre, correo, nit, direccion);
+            return new Empresa(nombre, correo, nit, direccion);
         }
         catch (Exception e)
         {
@@ -753,19 +749,18 @@ public class PersistenciaSuperAndes {
 		return sqlOrden.darOrden(pmf.getPersistenceManager());
 	}
 	
-	public PersonaNatural adicionarPersona(String nombre, String correo, Long cedula){
+	public PersonaNatural adicionarPersona(String nombre, String correo,Long cedula){
 		PersistenceManager pm = pmf.getPersistenceManager();
         Transaction tx=pm.currentTransaction();
         try
         {
             tx.begin();
-            long idPersona = nextval ();
-            long tuplasInsertadas = sqlPersona.adicionar(pm, idPersona, nombre, correo, cedula);
+            long tuplasInsertadas = sqlPersona.adicionar(pm, cedula, nombre, correo);
             tx.commit();
             
-            log.trace ("Inserción de la empresa: " + idPersona + ": " + tuplasInsertadas + " tuplas insertadas");
+            log.trace ("Inserción de la empresa: " + cedula + ": " + tuplasInsertadas + " tuplas insertadas");
             
-            return new PersonaNatural(idPersona, nombre, correo, cedula);
+            return new PersonaNatural(cedula, nombre, correo);
         }
         catch (Exception e)
         {
@@ -1212,4 +1207,5 @@ public class PersistenciaSuperAndes {
     		}
     	}
 	}
+
 }

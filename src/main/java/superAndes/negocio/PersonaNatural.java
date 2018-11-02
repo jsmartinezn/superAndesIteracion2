@@ -8,8 +8,8 @@ public class PersonaNatural extends Cliente implements VOPersonaNatural {
 		this.cedula = (long)0;
 	}
 	
-	public PersonaNatural(Long id, String nombre, String correo,Long cedula){
-		super(id,nombre,correo);
+	public PersonaNatural(Long cedula, String nombre, String correo){
+		super(nombre,correo);
 		this.cedula = cedula;
 	}
 		

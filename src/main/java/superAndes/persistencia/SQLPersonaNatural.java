@@ -43,7 +43,7 @@ class SQLPersonaNatural {
 	 */
 	public long eliminarTodas (PersistenceManager pm) 
 	{
-        Query q = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaPersonaNatural ());
+        Query q = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaCliente ());
         return (long) q.executeUnique();
 	}
 
@@ -56,14 +56,14 @@ class SQLPersonaNatural {
 	 */
 	public long eliminarPersona (PersistenceManager pm, Long id) 
 	{
-        Query q = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaPersonaNatural () + " WHERE id = ?");
+        Query q = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaCliente () + " WHERE identificacion = ?");
         q.setParameters(id);
         return (long) q.executeUnique();
 	}
 	
-	public long adicionar(PersistenceManager pm, Long id, String nombre, String correo, Long cedula) {
-		Query q = pm.newQuery(SQL,"INSERT INTO " + pp.darTablaPersonaNatural() + "(id, nombre, correo, cedula) values (?, ?, ?, ?)");
-		q.setParameters(id,nombre,correo,cedula);
+	public long adicionar(PersistenceManager pm, Long id, String nombre, String correo) {
+		Query q = pm.newQuery(SQL,"INSERT INTO " + pp.darTablaCliente() + "(identificacion, nombre, correo_electronico) values (?, ?, ?)");
+		q.setParameters(id,nombre,correo);
 		return (long)q.executeUnique();
 	}
 

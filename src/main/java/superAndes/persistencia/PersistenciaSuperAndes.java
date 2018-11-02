@@ -981,7 +981,7 @@ public class PersistenciaSuperAndes {
 		try
         {
             tx.begin();
-            CarritoCompras resp = sqlCarritoCompras.asignarCarrito(pm, idCliente,idSucursal);
+            CarritoCompras resp = sqlCarritoCompras.asignarCarrito(pm, nextval(),idCliente,idSucursal);
             tx.commit();
             return resp;
         }
@@ -1123,7 +1123,45 @@ public class PersistenciaSuperAndes {
             pm.close();
         }
 	}
-	
+	public void devolverCarritos()
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+        Transaction tx=pm.currentTransaction();
+        try
+        {
+            tx.begin();
+            List<Object[]> lista = sqlCarritoCompras.darCarritosAbandonados(pm);
+            for(Object[] objeto : lista)
+            {
+            	
+            	BigDecimal idCarrito = (BigDecimal) objeto[0];
+            	BigDecimal idProducto = (BigDecimal) objeto[1];
+            	quitarProducto(idProducto.longValue(), idCarrito.longValue());
+            }
+            List<Object> lista2 = sqlCarritoCompras.limpiarCarritosVacios(pm);
+            for(Object objeto : lista2)
+            {
+            	BigDecimal id = (BigDecimal)objeto;
+            	sqlCarritoCompras.borrarCarrito(pm, id.longValue());
+            }
+            tx.commit();
+            
+            log.trace ("Se recogieron todos los carros abandonados: ");
+            
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+            pm.close();
+        }
+	}
 	public void pagarCarrito(Long idCarrito,Date fecha)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();

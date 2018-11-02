@@ -192,5 +192,9 @@ public class SuperAndes {
 	public void pagarCarrito(Long idCarrito,Date fecha){
 		pp.pagarCarrito(idCarrito, fecha);
 	}
+	public void recogerCarritos(){
+		pp.devolverCarritos();
+	}
+	
 
 }

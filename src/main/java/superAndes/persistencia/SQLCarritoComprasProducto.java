@@ -74,4 +74,11 @@ public class SQLCarritoComprasProducto {
 		p.setParameters(idCarrito);
 		return p.executeList();
 	}
+	
+	public List<Object> darProductos(PersistenceManager pm,Long idCarrito){
+		Query p = pm.newQuery(SQL,"SELECT ID_PRODUCTO FROM " + pp.darTablaCarritoProducto() + " WHERE ID_CARRITO = ?");
+		p.setParameters(idCarrito);
+		return p.executeList();
+	}
+	
 }

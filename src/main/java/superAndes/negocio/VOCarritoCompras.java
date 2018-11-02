@@ -6,5 +6,5 @@ public interface VOCarritoCompras {
 	
 	public Long getIdCliente();
 	
-	
+	public Long getIdSucursal();
 }

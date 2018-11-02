@@ -590,6 +590,20 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 			panelDatos.actualizarInterfaz(resultado);
 		}
     }
+    public void devolverCarritos(){
+    	try{
+    		superandes.recogerCarritos();
+        		String resultado = "Se recogieron los carritos abandonados\n\n";
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		
+    	}catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
     
 
 	/* ****************************************************************

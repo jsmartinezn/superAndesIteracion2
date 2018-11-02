@@ -59,6 +59,10 @@
 				{
 					"label": "Pagar Carrito",
 					"event": "pagarCarrito"
+				},
+				{
+					"label": "Recoger Carritos",
+					"event": "devolverCarritos"
 				}
 									
 			]

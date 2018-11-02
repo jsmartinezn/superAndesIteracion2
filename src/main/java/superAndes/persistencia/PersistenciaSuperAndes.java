@@ -235,7 +235,7 @@ public class PersistenciaSuperAndes {
 	}
 	public String darTablaProvedor()
 	{
-		return tablas.get(9);
+		return tablas.get(11);
 	}
 	public String darTablaSucursal()
 	{

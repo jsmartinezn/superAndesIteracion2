@@ -32,6 +32,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
+import superAndes.negocio.Proveedor;
 import superAndes.negocio.SuperAndes;
 import superAndes.negocio.VOBodega;
 import superAndes.negocio.VOBodegaProducto;
@@ -41,6 +42,7 @@ import superAndes.negocio.VOCompra;
 import superAndes.negocio.VOEmpresa;
 import superAndes.negocio.VOEstante;
 import superAndes.negocio.VOPersonaNatural;
+import superAndes.negocio.VOProveedor;
 
 /**
  * Clase principal de la interfaz
@@ -446,6 +448,40 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
      * Adiciona un tipo de bebida con la información dada por el usuario
      * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
      */
+    public void adicionarProveedor( )
+    {
+    	try 
+    	{
+    		String nit = JOptionPane.showInputDialog(this,"NIT del proveedor", "Adicionar Proveedor",JOptionPane.QUESTION_MESSAGE);
+    		String nombre = JOptionPane.showInputDialog(this, "Nombre del proveedor", "Adicionar Proveedor", JOptionPane.QUESTION_MESSAGE);
+    		if (nit != null && nombre!=null)
+    		{
+    			VOProveedor tb = superandes.adicionarProveedor(Long.valueOf(nit), nombre);
+        		if (tb == null)
+        		{
+        			throw new Exception ("No se pudo adicionar el proveedor: " + nombre);
+        		}
+        		String resultado = "En adicionar Proveedor\n\n";
+        		resultado += "Proveedor adicionado exitosamente: " + tb;
+    			resultado += "\n Operación terminada";
+    			panelDatos.actualizarInterfaz(resultado);
+    		}
+    		else
+    		{
+    			panelDatos.actualizarInterfaz("Operación cancelada por el usuario");
+    		}
+		} 
+    	catch (Exception e) 
+    	{
+//			e.printStackTrace();
+			String resultado = generarMensajeError(e);
+			panelDatos.actualizarInterfaz(resultado);
+		}
+    }
+    /**
+     * Adiciona un tipo de bebida con la información dada por el usuario
+     * Se crea una nueva tupla de tipoBebida en la base de datos, si un tipo de bebida con ese nombre no existía
+     */
     public void adicionarCliente( )
     {
     	try 
@@ -513,6 +549,9 @@ public class InterfazSuperandes  extends JFrame implements ActionListener{
 			panelDatos.actualizarInterfaz(resultado);
 		}
     }
+    
+    
+    
     public void quitarCarrito(){
     	try{
     		String idCliente = JOptionPane.showInputDialog(this,"Id Cliente", "Quitar Carro",JOptionPane.QUESTION_MESSAGE);

@@ -87,19 +87,18 @@ class SQLBodega {
 	{
 		String a = "SELECT BODEGA_PRODUCTO.ID_BODEGA, BODEGA_PRODUCTO.CANTIDAD,PRODUCTO.PESO,PRODUCTO.VOLUMEN,BODEGA.PESO,BODEGA.VOLUMEN FROM ";
 		a += pp.darTablaBodegaProducto() + "," + pp.darTablaBodega() + "," + pp.darTablaProducto();
-		a += " WHERE BODEGA_PRODUCTO.ID_PRODUCTO=PRODUCTO.ID AND BODEGA.ID=BODEGA_PRODUCTO.ID_BODEGA AND BODEGA.ID_SUCURSAL = ? AND PRODUCTO.ID = ?";
+		a += " WHERE BODEGA_PRODUCTO.ID_PRODUCTO=PRODUCTO.CODIGO_BARRAS AND BODEGA.ID=BODEGA_PRODUCTO.ID_BODEGA AND BODEGA.ID_SUCURSAL = ? AND PRODUCTO.CODIGO_BARRAS = ?";
 		Query q = pm.newQuery(SQL, a);
 		q.setParameters(idSucursal,idProducto);
 		q.setResultClass(Object[].class);
 		return q.executeList();
 	}
 		
-	public List<Bodega> darBodega(PersistenceManager pm,Long idSucursal)
+	public List<Object[]> darBodegas(PersistenceManager pm,Long idSucursal)
 	{
-		Query q = pm.newQuery(SQL, "SELECT FROM" + pp.darTablaBodega() + "WHERE idsucursal = ?");
-		q.setResultClass(Bodega.class);
+		Query q = pm.newQuery(SQL, "SELECT * FROM " + pp.darTablaBodega() + " WHERE id_sucursal = ?");
 		q.setParameters(idSucursal);
-		return (List<Bodega>) q.executeList();
+		return q.executeList();
 	}
 	
 	public Bodega darBodega(PersistenceManager pm, Long idSucursal,Long idCliente){
@@ -108,21 +107,56 @@ class SQLBodega {
 		q.setResultClass(Bodega.class);
 		return (Bodega) q.executeUnique();
 	}
-
-	public long actualizarBodega(PersistenceManager pm,Integer cant, Long idP, Long idS) {
-		Query q = pm.newQuery(SQL,"SELECT volumen,peso FROM "+ pp.darTablaProducto() + " WHERE id = ?");
-		q.setParameters(idP);
-		q.setResultClass(Producto.class);
-		Producto nuevo = (Producto) q.executeUnique();
-		Double volumen = nuevo.getVolumen();
-		Double peso = nuevo.getPeso();	
-		Bodega temp = darBodega(pm, idS, idP);
-		Query p = pm.newQuery(SQL, "UPDATE " + pp.darTablaBodega() + " SET volumenactual = ?, pesoactual = ?, cantidad = ? WHERE tipoproducto = (SELECT tipoproducto FROM " + pp.darTablaProducto() + " WHERE id = ?) AND idSucursal = ? ");
-		p.setParameters((0-cant)*volumen,(0-cant)*peso,cant,idP,idS);
-		return (long)p.executeUnique();
-		
+	
+	public List<Object[]> darDisponible(PersistenceManager pm, String tipoProducto,Long idSucursal,Long idProducto){
+		String a = "SELECT BODEGA.ID, BODEGA.PESO - PESOS, BODEGA.VOLUMEN - VOLUM, BODEGA_PRODUCTO.CANTIDAD  FROM ";
+		a += pp.darTablaBodega() + "," + pp.darTablaBodegaProducto();
+		a += ",( SELECT BODEGA_PRODUCTO.ID_BODEGA AS IDD,SUM(CANTIDAD*PESO) AS PESOS,SUM(CANTIDAD*VOLUMEN) AS VOLUM FROM ";
+		a += pp.darTablaBodegaProducto() + "," + pp.darTablaProducto();
+		a += " WHERE PRODUCTO.CODIGO_BARRAS = BODEGA_PRODUCTO.ID_PRODUCTO AND PRODUCTO.TIPO_PRODUCTO = ? GROUP BY BODEGA_PRODUCTO.ID_BODEGA) WHERE IDD=ID AND ID_SUCURSAL = ? AND ID = ID_BODEGA AND ID_PRODUCTO = ?";
+		Query q = pm.newQuery(SQL, a);
+		q.setParameters(tipoProducto,idSucursal,idProducto);
+		return q.executeList();
 	}
 
-
+	public void borrarBodega(PersistenceManager pm) {
+		Query q = pm.newQuery(SQL,"DELETE FROM " + pp.darTablaBodega());
+		q.executeUnique();
+		
+	}
+	
+	public void borrarTodo(PersistenceManager pm){
+		Query q1 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaBodegaProducto());
+		q1.executeUnique();
+		Query q2 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaEstanteProducto());
+		q2.executeUnique();
+		Query q3 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaBodega());
+		q3.executeUnique();
+		Query q12 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaEstante());
+		q12.executeUnique();
+		Query q4 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaSucursalProducto());
+		q4.executeUnique();
+		Query q5 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaProductoProvedor());
+		q5.executeUnique();
+		Query q6 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaCompraProducto());
+		q6.executeUnique();		
+		Query q7 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaOrdenPedido());
+		q7.executeUnique();		
+		Query q8 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaSucursal());
+		q8.executeUnique();
+		Query q9 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaCarritoProducto());
+		q9.executeUnique();
+		Query q10 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaEstanteProducto());
+		q10.executeUnique();
+		Query q14 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaCarrito());
+		q14.executeUnique();
+		Query q13 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaCliente());
+		q13.executeUnique();
+		Query q11 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaProducto());
+		q11.executeUnique();
+		Query q15 = pm.newQuery(SQL, "DELETE FROM " + pp.darTablaProvedor());
+		q15.executeUnique();
+	}
+	
 	
 }

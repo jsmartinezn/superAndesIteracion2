@@ -1,6 +1,6 @@
 package superAndes.negocio;
 
-public class SucursalProducto {
+public class SucursalProducto implements VOSucursalProducto{
 	
 	private Long idSucursal;
 	

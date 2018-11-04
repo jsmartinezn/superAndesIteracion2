@@ -1,6 +1,6 @@
 package superAndes.negocio;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -81,8 +81,8 @@ public class SuperAndes {
 		return pp.adicionarBodegaProducto(idBodega, idProducto, cantidad);
 	}
 	
-	public Compra adicionarCompra(Long idC, Long idS, Long idP,Integer cantidad,Date fecha){
-		return pp.adicionarCompra(idC, idS,idP,cantidad, fecha,true);
+	public CompraProducto adicionarCompraProucto(Long idC, Long idS, Long idP,Integer cantidad,Date fecha){
+		return pp.adicionarCompraProducto(idC, idS,idP,cantidad, fecha,true);
 	}
 	
 	public List<VOCompra> darComprasFechas(Date fechaInicio,Date fechaFin){
@@ -102,15 +102,15 @@ public class SuperAndes {
 	}
 	//
 	public Empresa adicionarEmpresa(String nombre, String correo, Long nit,String direccion){
-		return pp.adicionarEmpresa(nombre, correo, nit, direccion);
+		return pp.adicionarEmpresas(nombre, correo, nit, direccion);
 	}
 	
 	public Estante adicionarEstante(Long idSucursal,String tipoProducto,Double volumen,Double peso,Double nivelReOrden){
 		return pp.adicionarEstante(idSucursal,tipoProducto, volumen, peso,nivelReOrden);
 	}
 	
-	public OrdenPedido adicionarOrdenPedido(Long idProveedor,Long idSucursal,Date fechaEsperada, String estado){
-		return pp.adicionarOrdenPedido(idProveedor, idSucursal, fechaEsperada, estado);
+	public OrdenPedido adicionarOrdenPedido(Long idProveedor,Long idSucursal,Long idProducto,Double precio,Integer cantidad,Date fechaEsperada, String estado){
+		return pp.adicionarOrdenPedido(idProveedor, idSucursal, idProducto, precio, cantidad, fechaEsperada, estado);
 	}
 	
 	public PersonaNatural adicionarPersona(String nombre, String correo, Long cedula){
@@ -141,9 +141,14 @@ public class SuperAndes {
 		return pp.adicionarProveedor(nit, nombre);
 	}
 	
-	public SucursalProducto adicionarSucursalProducto(Long idProducto, Double precio, Integer nivelReorden)
+	public SucursalProducto adicionarSucursalProducto(Long idSucursal,Long idProducto, Double precio, Integer nivelReorden)
 	{
-		return pp.adicionarSucursalProducto(idProducto, precio, nivelReorden);
+		return pp.adicionarSucursalProducto(idSucursal,idProducto, precio, nivelReorden);
+	}
+	
+	public Sucursal adicionarSucursal(String ciudad, String direccion)
+	{
+		return pp.adicionarSucursal(ciudad, direccion);
 	}
 	
 	public List<VOPromocion> darPromocionesMasPopulares()
@@ -164,8 +169,8 @@ public class SuperAndes {
 		return resp;
 	}
 	
-	public long realizarEntrega(Long id,Date fecha,Double calificacion,String estado){
-		return pp.realizarEntrega(id, fecha, calificacion, estado);
+	public long realizarEntrega(Long id,Date fecha,Double calificacion,String estado,Integer cantidadR){
+		return pp.realizarEntrega(id, fecha, calificacion, estado,cantidadR);
 	}
 	
 	public CarritoCompras asignarCarro(Long idCliente,Long idSucursal){
@@ -182,12 +187,8 @@ public class SuperAndes {
 		pp.quitarProducto(idProducto, idCarrito);
 	}
 	
-	public List<VOOrdenPedido> darOrdenes(){
-		List<OrdenPedido> temp = pp.darOrdenes();
-		List<VOOrdenPedido> resp = new LinkedList<>();
-		for(OrdenPedido nuevo : temp)
-			resp.add(nuevo);
-		return resp;
+	public List<OrdenPedido> darOrdenes(){
+		return pp.darOrdenes();
 	}	
 	public void pagarCarrito(Long idCarrito,Date fecha){
 		pp.pagarCarrito(idCarrito, fecha);
@@ -196,5 +197,46 @@ public class SuperAndes {
 		pp.devolverCarritos();
 	}
 	
+	public long getIdSucursal(String direccion, String ciudad){
+		return pp.getIdSucursal(direccion,ciudad);
+	}
 
+	public void borrar(){
+		pp.borrarTodo();
+	}
+	
+	public List<Bodega> darBodegas(Long idSucursal)
+	{
+		return pp.darBodegas(idSucursal);
+	}
+	public void borrarBodega(){
+		pp.borrarBodega();
+	}
+	public List<Object[]> unidadesEnInv(Long idSucursal,Long idProducto) {
+		return pp.unidadesEnInv(idSucursal, idProducto);
+	}
+	
+	public List<Object[]> unidadesEnInvE(Long idSucursal,Long idProducto) {
+		return pp.unidadesEnInvE(idSucursal, idProducto);
+	}
+
+	public VOEstanteProducto adicionarEstanteProducto(Long idSucursal, Long codigoDeBarras, int cantidad) {
+		return pp.adicionarEstanteProducto(idSucursal, codigoDeBarras, cantidad);
+	}
+
+	public List<Estante> darEstantes(Long idSucursal) {
+		return pp.darEstantes(idSucursal);
+	}
+
+	public List<Cliente> darClientes() {
+		return pp.darClientes();
+	}
+
+	public List<Proveedor> darProveedores() {
+		return pp.darProveedores();
+	}
+
+	public List<Sucursal> darSucursales() {
+		return pp.darSucursales();
+	}
 }

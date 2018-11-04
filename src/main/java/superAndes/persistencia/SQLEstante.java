@@ -57,10 +57,9 @@ class SQLEstante {
         return (long) q.executeUnique();
 	}
 
-	public List<Estante> darEstante(PersistenceManager pm,Long idSucursal)
+	public List<Object[]> darEstante(PersistenceManager pm,Long idSucursal)
 	{
-		Query q = pm.newQuery(SQL, "SELECT * FROM" + pp.darTablaEstante() + "WHERE idsucursal = ?");
-		q.setResultClass(Estante.class);
+		Query q = pm.newQuery(SQL, "SELECT * FROM " + pp.darTablaEstante() + " WHERE id_sucursal = ?");
 		q.setParameters(idSucursal);
 		return q.executeList();
 	}
@@ -94,7 +93,7 @@ class SQLEstante {
 	{
 		String a = "SELECT ESTANTE_PRODUCTO.ID_ESTANTE, ESTANTE_PRODUCTO.CANTIDAD,PRODUCTO.PESO,PRODUCTO.VOLUMEN,ESTANTE.PESO,ESTANTE.VOLUMEN,ESTANTE.NIVEL FROM ";
 		a += pp.darTablaEstanteProducto() + "," + pp.darTablaEstante() + "," + pp.darTablaProducto();
-		a += " WHERE ESTANTE_PRODUCTO.ID_PRODUCTO=PRODUCTO.ID AND ESTANTE.ID=ESTANTE_PRODUCTO.ID_ESTANTE AND ESTANTE.ID_SUCURSAL = ? AND PRODUCTO.ID = ?";
+		a += " WHERE ESTANTE_PRODUCTO.ID_PRODUCTO=PRODUCTO.CODIGO_BARRAS AND ESTANTE.ID=ESTANTE_PRODUCTO.ID_ESTANTE AND ESTANTE.ID_SUCURSAL = ? AND PRODUCTO.CODIGO_BARRAS = ?";
 		Query q = pm.newQuery(SQL, a);
 		q.setParameters(idSucursal,idProducto);
 		q.setResultClass(Object[].class);

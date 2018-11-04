@@ -47,7 +47,7 @@ public class SQLCompraProducto {
 	 */
 	public long adicionarCompra (PersistenceManager pm,Long idProducto, Long idFactura,Integer cantidad, Double precio) 
 	{
-        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaCompraProducto () + "(id_producto, id_factura, cantidad, precio) values (?, ?, ?, ?)");
+        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaCompraProducto () + "(id_producto, id_compra, cantidad, precio) values (?, ?, ?, ?)");
         q.setParameters(idProducto,idFactura,cantidad,precio);
         return (long) q.executeUnique();
 	}

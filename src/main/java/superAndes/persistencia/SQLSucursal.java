@@ -1,5 +1,7 @@
 package superAndes.persistencia;
 
+import java.util.List;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -28,4 +30,22 @@ public class SQLSucursal {
         q.setParameters(id, ciudad, direccion);
         return (long) q.executeUnique();
 	}
+
+	public List<Object> getIdSucursal(PersistenceManager pm, String direccion, String ciudad) {
+		Query q = pm.newQuery(SQL, "SELECT ID FROM " + pp.darTablaSucursal() + " WHERE DIRECCION = ? AND CIUDAD = ?");
+		q.setParameters(direccion,ciudad);
+		return q.executeList();
+	}
+
+	public List<Object[]> darSucursales(PersistenceManager pm) {
+		Query q = pm.newQuery(SQL, "SELECT * FROM " + pp.darTablaSucursal());
+		q.setParameters();
+		return q.executeList();
+	}
+	
+	public List<Object[]> darClientes(PersistenceManager pm) {
+		Query q = pm.newQuery(SQL, "SELECT * FROM " + pp.darTablaSucursal());
+		return q.executeList();
+	}
+	
 }

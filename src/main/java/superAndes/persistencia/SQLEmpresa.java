@@ -1,5 +1,7 @@
 package superAndes.persistencia;
 
+import java.util.List;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -40,4 +42,8 @@ class SQLEmpresa {
 		return (long) q.executeUnique();
 	}
 
+	public List<Object[]> darClientes(PersistenceManager pm) {
+		Query q = pm.newQuery(SQL, "SELECT * FROM " + pp.darTablaCliente());
+		return q.executeList();
+	}
 }

@@ -47,10 +47,10 @@ class SQLCompra {
 	 * @param horario - EL horario en que se realizó la visita (DIURNO, NOCTURNO, TODOS)
 	 * @return EL número de tuplas insertadas
 	 */
-	public long adicionarCompra (PersistenceManager pm,Long id, Long idC, Long idS,Date fecha) 
+	public long adicionarCompra (PersistenceManager pm,Long id, Long idC, Long idS) 
 	{
-        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaCompra () + "(id, id_cliente, id_sucursal, fecha) values (?, ?, ?, ?)");
-        q.setParameters(id,idC,idS,fecha);
+        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaCompra () + "(id, id_cliente, id_sucursal) values (?, ?, ?)");
+        q.setParameters(id,idC,idS);
         return (long) q.executeUnique();
 	}
 

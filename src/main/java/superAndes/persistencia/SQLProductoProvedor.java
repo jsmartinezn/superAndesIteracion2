@@ -1,5 +1,7 @@
 package superAndes.persistencia;
 
+import java.util.List;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -25,8 +27,14 @@ public class SQLProductoProvedor {
 	}
 	
 	public long adicionarProductoProvedor(PersistenceManager pm, Long idProducto, Long idProvedor, Double precio, Double indiceCalidad){
-        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaProductoProvedor () + "(id_producto, id_provedor, precio, indice_calidad) values (?, ?, ?, ?)");
+        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaProductoProvedor () + "(id_producto, id_proveedor, precio, indice_calidad) values (?, ?, ?, ?)");
         q.setParameters(idProducto, idProvedor, precio, indiceCalidad);
         return (long) q.executeUnique();
+	}
+	
+	public List<Object[]> darProductoProvedor(PersistenceManager pm, Long idProducto){
+        Query q = pm.newQuery(SQL, "SELECT ID_PROVEEDOR, PRECIO FROM " + pp.darTablaProductoProvedor () + " WHERE ID_PRODUCTO = ?");
+        q.setParameters(idProducto);
+        return q.executeList();
 	}
 }

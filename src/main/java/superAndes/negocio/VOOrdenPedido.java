@@ -23,4 +23,6 @@ public interface VOOrdenPedido {
 	public Integer getCantidad();
 	
 	public Double getPrecioUnitario();
+	
+	public Integer getCantidadRecibida();
 }

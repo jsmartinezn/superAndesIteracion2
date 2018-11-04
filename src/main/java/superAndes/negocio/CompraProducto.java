@@ -10,6 +10,20 @@ public class CompraProducto  implements VOCompraProducto{
 	
 	private Double precio;
 
+	public CompraProducto(){
+		this.idFactura = (long) 0;
+		this.idProducto = (long) 0;
+		this.cantidad = 0;
+		this.precio =0.0;
+	}
+	
+	public CompraProducto(Long idP,Long idC,Integer cantidad,Double precio){
+		this.idFactura = idC;
+		this.idProducto = idP;
+		this.cantidad = cantidad;
+		this.precio = precio;
+	}
+	
 	public Long getIdProducto() {
 		return idProducto;
 	}

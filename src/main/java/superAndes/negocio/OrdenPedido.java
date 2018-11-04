@@ -1,3 +1,4 @@
+
 package superAndes.negocio;
 
 import java.util.Date;
@@ -18,6 +19,8 @@ public class OrdenPedido implements VOOrdenPedido{
 	
 	private Integer cantidad;
 	
+	private Integer cantidadRecibida;
+	
 	private Double precioUnitario;
 	
 	private Date fechaEspEntrega;
@@ -36,15 +39,21 @@ public class OrdenPedido implements VOOrdenPedido{
 		this.fechaEspEntrega = new Date();
 		this.calificacion = 0.0;
 		this.estado = P;
+		this .cantidadRecibida= 0;
 	}
 	
-	public OrdenPedido(Long id,Long idProveedor,Long idS,Date fechaEsperada,Date fechaReal,String estado){
+	public OrdenPedido(Long id,Long idProveedor,Long idS,Long idP,Date fechaEsperada,Integer cantidad,Double precio,Date fechaReal,String estado,Integer cantidadR,Double calificacion){
 		this.id = id;
 		this.idProveedor = idProveedor;
 		this.idSucursal = idS;
 		this.fechaEntrega = fechaReal;
 		this.fechaEspEntrega = fechaEsperada;
 		this.estado = estado;
+		this.cantidadRecibida = cantidadR;
+		this.cantidad= cantidad;
+		this.precioUnitario = precio;
+		this.idProducto = idP;
+		this.calificacion = calificacion;
 	}	
 	
 	public Long getId() {
@@ -126,5 +135,13 @@ public class OrdenPedido implements VOOrdenPedido{
 
 	public void setPrecioUnitario(Double precioUnitario) {
 		this.precioUnitario = precioUnitario;
+	}
+
+	public Integer getCantidadRecibida() {
+		return cantidadRecibida;
+	}
+
+	public void setCantidadRecibida(Integer cantidadRecibida) {
+		this.cantidadRecibida = cantidadRecibida;
 	}
 }

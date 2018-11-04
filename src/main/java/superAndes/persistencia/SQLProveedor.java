@@ -1,5 +1,7 @@
 package superAndes.persistencia;
 
+import java.util.List;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -28,6 +30,11 @@ public class SQLProveedor {
         Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaProvedor () + "(nit, nombre) values (?, ?)");
         q.setParameters(nit, nombre);
         return (long) q.executeUnique();
+	}
+
+	public List<Object[]> darProveedores(PersistenceManager pm) {
+		Query q = pm.newQuery(SQL, "SELECT * FROM " + pp.darTablaProvedor());
+		return q.executeList();
 	}
 	
 }

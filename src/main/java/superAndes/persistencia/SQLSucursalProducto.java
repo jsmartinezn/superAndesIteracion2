@@ -23,9 +23,15 @@ public class SQLSucursalProducto {
 		this.pp = pp;
 	}
 	
-	public long adicionarSucursalProvedor(PersistenceManager pm, Long idSucursal, Long idProducto, Double precio, Integer nivelReorden){
-        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaSucursalProvedor () + "(id_sucursal, id_producto, precio, nivel_reorden) values ( ?, ?, ?, ?)");
+	public long adicionarSucursalProducto(PersistenceManager pm, Long idSucursal, Long idProducto, Double precio, Integer nivelReorden){
+        Query q = pm.newQuery(SQL, "INSERT INTO " + pp.darTablaSucursalProducto () + "(id_sucursal, id_producto, precio, nivel) values ( ?, ?, ?, ?)");
         q.setParameters(idSucursal, idProducto, precio, nivelReorden);
         return (long) q.executeUnique();
+	}
+	
+	public Object getPrecio(PersistenceManager pm,Long idSucursal,Long idproducto){
+		Query q = pm.newQuery(SQL,"SELECT PRECIO FROM " + pp.darTablaSucursalProducto() + " WHERE ID_SUCURSAL = ? AND ID_PRODUCTO = ?");
+		q.setParameters(idSucursal,idproducto);
+		return q.executeUnique();
 	}
 }

@@ -67,6 +67,30 @@
 				{
 					"label": "Adicionar Proveedor",
 					"event": "adicionarProveedor"
+				},
+				{
+					"label": "Adicionar Producto Proveedor",
+					"event": "adicionarProductoProveedor"
+				},
+				{
+					"label": "Adicionar Producto",
+					"event": "adicionarProducto"
+				},
+				{
+					"label": "Adicionar Sucursal",
+					"event": "adicionarSucursal"
+				},
+				{
+					"label": "Adicionar Sucursal Producto",
+					"event": "adicionarSucursalProducto"
+				},
+				{
+					"label": "Adicionar Orden",
+					"event": "adicionarOrden"
+				},
+				{
+					"label": "Registrar llegada",
+					"event": "registrarLlegada"
 				}									
 			]
 		},
